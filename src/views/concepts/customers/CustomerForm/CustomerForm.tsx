@@ -5,7 +5,6 @@ import BottomStickyBar from '@/components/template/BottomStickyBar'
 import OverviewSection from './OverviewSection'
 import AddressSection from './AddressSection'
 import TagsSection from './TagsSection'
-import ProfileImageSection from './ProfileImageSection'
 import AccountSection from './AccountSection'
 import isEmpty from 'lodash/isEmpty'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -88,10 +87,6 @@ const CustomerForm = (props: CustomerFormProps) => {
                         <AddressSection control={control} errors={errors} />
                     </div>
                     <div className="md:w-[370px] gap-4 flex flex-col">
-                        <ProfileImageSection
-                            control={control}
-                            errors={errors}
-                        />
                         <TagsSection control={control} errors={errors} />
                         {!newCustomer && (
                             <AccountSection control={control} errors={errors} />

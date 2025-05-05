@@ -1,6 +1,5 @@
 import classNames from '@/utils/classNames'
 import ScrollBar from '@/components/ui/ScrollBar'
-import Logo from '@/components/template/Logo'
 import VerticalMenuContent from '@/components/template/VerticalMenuContent'
 import { useThemeStore } from '@/store/themeStore'
 import { useSessionUser } from '@/store/authStore'
@@ -11,9 +10,7 @@ import { Link } from 'react-router-dom'
 import {
     SIDE_NAV_WIDTH,
     SIDE_NAV_COLLAPSED_WIDTH,
-    SIDE_NAV_CONTENT_GUTTER,
     HEADER_HEIGHT,
-    LOGO_X_GUTTER,
 } from '@/constants/theme.constant'
 import type { Mode } from '@/@types/theme'
 
@@ -40,9 +37,7 @@ const SideNav = ({
     background = true,
     className,
     contentClass,
-    mode,
 }: SideNavProps) => {
-    const defaultMode = useThemeStore((state) => state.mode)
     const direction = useThemeStore((state) => state.direction)
     const sideNavCollapse = useThemeStore(
         (state) => state.layout.sideNavCollapse,
@@ -67,17 +62,9 @@ const SideNav = ({
                 className="side-nav-header flex flex-col justify-center"
                 style={{ height: HEADER_HEIGHT }}
             >
-                <Logo
-                    imgClass="max-h-10"
-                    mode={mode || defaultMode}
-                    type={sideNavCollapse ? 'streamline' : 'full'}
-                    className={classNames(
-                        sideNavCollapse && 'ltr:ml-[11.5px] ltr:mr-[11.5px]',
-                        sideNavCollapse
-                            ? SIDE_NAV_CONTENT_GUTTER
-                            : LOGO_X_GUTTER,
-                    )}
-                />
+                <h4 className="mx-4 text-ellipsis text-bold text-md">
+                    Sales<span className="text-green-600">ify</span>
+                </h4>
             </Link>
             <div className={classNames('side-nav-content', contentClass)}>
                 <ScrollBar style={{ height: '100%' }} direction={direction}>

@@ -1,6 +1,5 @@
 import Loading from '@/components/shared/Loading'
 import KpiSummary from './components/KpiSummary'
-import RecentCampaign from './components/RecentCampaign'
 import AdsPerformance from './components/AdsPerformance'
 import LeadPerformance from './components/LeadPerformance'
 import { apiGetMarketingDashboard } from '@/services/DashboardService'
@@ -29,7 +28,6 @@ const MarketingDashboard = () => {
                         </div>
                         <LeadPerformance data={data.leadPerformance} />
                     </div>
-                    <RecentCampaign data={data.recentCampaign} />
                 </div>
             )}
         </Loading>

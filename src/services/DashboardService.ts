@@ -9,8 +9,8 @@ export async function apiGetEcommerceDashboard<T>() {
 
 export async function apiGetProjectDashboard<T>() {
     return ApiService.fetchDataWithAxios<T>({
-        url: '/api/dashboard/project',
-        method: 'get',
+        url: '/before',
+        method: 'GET',
     })
 }
 

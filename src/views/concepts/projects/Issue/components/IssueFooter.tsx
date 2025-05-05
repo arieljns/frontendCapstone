@@ -45,8 +45,8 @@ const IssueFooter = () => {
     return (
         <Tabs className="mt-6" defaultValue="comments">
             <TabList>
-                <TabNav value="comments">Comments</TabNav>
-                <TabNav value="attachments">Attachments</TabNav>
+                <TabNav value="comments">Details</TabNav>
+                <TabNav value="attachments">Meeting Debrief</TabNav>
             </TabList>
             <div className="p-4">
                 <TabContent value="comments">

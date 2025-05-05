@@ -1,19 +1,13 @@
 import { useState } from 'react'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
-import Avatar from '@/components/ui/Avatar/Avatar'
 import Notification from '@/components/ui/Notification'
 import Tooltip from '@/components/ui/Tooltip'
 import toast from '@/components/ui/toast'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import dayjs from 'dayjs'
 import { HiPencil, HiOutlineTrash } from 'react-icons/hi'
-import {
-    FaXTwitter,
-    FaFacebookF,
-    FaLinkedinIn,
-    FaPinterestP,
-} from 'react-icons/fa6'
+import { FaWhatsapp, FaGoogle, FaLinkedinIn } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
 
 type CustomerInfoFieldProps = {
@@ -99,9 +93,8 @@ const ProfileSection = ({ data = {} }: ProfileSectionProps) => {
                 </Tooltip>
             </div>
             <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
-                <div className="flex xl:flex-col items-center gap-4 mt-6">
-                    <Avatar size={90} shape="circle" src={data.img} />
-                    <h4 className="font-bold">{data.name}</h4>
+                <div className="flex xl:flex-col  gap-4 mt-6">
+                    <h4 className="font-bold">PT Tri Jaya Coco</h4>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-10">
                     <CustomerInfoField title="Email" value={data.email} />
@@ -114,7 +107,7 @@ const ProfileSection = ({ data = {} }: ProfileSectionProps) => {
                         value={data.personalInfo?.birthday}
                     />
                     <CustomerInfoField
-                        title="Last Online"
+                        title="Meeting Date"
                         value={dayjs
                             .unix(data.lastOnline as number)
                             .format('DD MMM YYYY hh:mm A')}
@@ -124,9 +117,7 @@ const ProfileSection = ({ data = {} }: ProfileSectionProps) => {
                         <div className="flex mt-4 gap-2">
                             <Button
                                 size="sm"
-                                icon={
-                                    <FaFacebookF className="text-[#2259f2]" />
-                                }
+                                icon={<FaGoogle className="text-[#2259f2]" />}
                                 onClick={() =>
                                     handleSocialNavigate(
                                         data.personalInfo?.facebook,
@@ -136,7 +127,7 @@ const ProfileSection = ({ data = {} }: ProfileSectionProps) => {
                             <Button
                                 size="sm"
                                 icon={
-                                    <FaXTwitter className="text-black dark:text-white" />
+                                    <FaWhatsapp className="text-black dark:text-white" />
                                 }
                                 onClick={() =>
                                     handleSocialNavigate(
@@ -152,17 +143,6 @@ const ProfileSection = ({ data = {} }: ProfileSectionProps) => {
                                 onClick={() =>
                                     handleSocialNavigate(
                                         data.personalInfo?.linkedIn,
-                                    )
-                                }
-                            />
-                            <Button
-                                size="sm"
-                                icon={
-                                    <FaPinterestP className="text-[#df0018]" />
-                                }
-                                onClick={() =>
-                                    handleSocialNavigate(
-                                        data.personalInfo?.pinterest,
                                     )
                                 }
                             />

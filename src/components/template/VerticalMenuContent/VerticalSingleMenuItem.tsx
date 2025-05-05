@@ -14,10 +14,6 @@ interface CollapsedItemProps extends CommonProps {
     nav: NavigationTree
     direction?: Direction
     onLinkClick?: (link: { key: string; title: string; path: string }) => void
-    t: (
-        key: string,
-        fallback?: string | Record<string, string | number>,
-    ) => string
     renderAsIcon?: boolean
     userAuthority: string[]
     currentKey?: string
@@ -28,10 +24,6 @@ interface DefaultItemProps {
     nav: NavigationTree
     onLinkClick?: (link: { key: string; title: string; path: string }) => void
     sideCollapsed?: boolean
-    t: (
-        key: string,
-        fallback?: string | Record<string, string | number>,
-    ) => string
     indent?: boolean
     userAuthority: string[]
     showIcon?: boolean
@@ -47,14 +39,13 @@ const CollapsedItem = ({
     renderAsIcon,
     onLinkClick,
     userAuthority,
-    t,
     currentKey
 }: CollapsedItemProps) => {
     return (
         <AuthorityCheck userAuthority={userAuthority} authority={nav.authority}>
             {renderAsIcon ? (
                 <Tooltip
-                    title={t(nav.translateKey, nav.title)}
+                    title={nav.title}
                     placement={direction === 'rtl' ? 'left' : 'right'}
                 >
                     {children}
@@ -74,10 +65,10 @@ const CollapsedItem = ({
                                 })
                             }
                         >
-                            <span>{t(nav.translateKey, nav.title)}</span>
+                            <span>{nav.title}</span>
                         </Link>
                     ) : (
-                        <span>{t(nav.translateKey, nav.title)}</span>
+                        <span>{nav.title}</span>
                     )}
                 </Dropdown.Item>
             )}
@@ -93,7 +84,6 @@ const DefaultItem = (props: DefaultItemProps) => {
         indent,
         showIcon = true,
         userAuthority,
-        t,
     } = props
 
     return (
@@ -112,7 +102,7 @@ const DefaultItem = (props: DefaultItemProps) => {
                     }
                 >
                     {showIcon && <VerticalMenuIcon icon={nav.icon} />}
-                    {showTitle && <span>{t(nav.translateKey, nav.title)}</span>}
+                    {showTitle && <span>{nav.title}</span>}
                 </Link>
             </MenuItem>
         </AuthorityCheck>
@@ -129,10 +119,9 @@ const VerticalSingleMenuItem = ({
     userAuthority,
     showIcon,
     showTitle,
-    t,
     currentKey,
     parentKeys
-}: Omit<VerticalMenuItemProps, 'title' | 'translateKey'>) => {
+}: Omit<VerticalMenuItemProps, 'title'>) => {
     return (
         <>
             {sideCollapsed ? (
@@ -143,7 +132,6 @@ const VerticalSingleMenuItem = ({
                     direction={direction}
                     renderAsIcon={renderAsIcon}
                     userAuthority={userAuthority}
-                    t={t}
                     onLinkClick={onLinkClick}
                 >
                     <DefaultItem
@@ -152,7 +140,6 @@ const VerticalSingleMenuItem = ({
                         userAuthority={userAuthority}
                         showIcon={showIcon}
                         showTitle={showTitle}
-                        t={t}
                         onLinkClick={onLinkClick}
                     />
                 </CollapsedItem>
@@ -164,7 +151,6 @@ const VerticalSingleMenuItem = ({
                     showIcon={showIcon}
                     showTitle={showTitle}
                     indent={indent}
-                    t={t}
                     onLinkClick={onLinkClick}
                 />
             )}

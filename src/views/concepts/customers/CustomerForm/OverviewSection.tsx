@@ -4,13 +4,12 @@ import Input from '@/components/ui/Input'
 import Select, { Option as DefaultOption } from '@/components/ui/Select'
 import Avatar from '@/components/ui/Avatar'
 import { FormItem } from '@/components/ui/Form'
-import NumericInput from '@/components/shared/NumericInput'
 import { countryList } from '@/constants/countries.constant'
 import { Controller } from 'react-hook-form'
 import { components } from 'react-select'
 import type { FormSectionBaseProps } from './types'
 import type { ControlProps, OptionProps } from 'react-select'
-
+import DatePicker from '@/components/ui/DatePicker/DatePicker'
 type OverviewSectionProps = FormSectionBaseProps
 
 type CountryOption = {
@@ -70,10 +69,10 @@ const OverviewSection = ({ control, errors }: OverviewSectionProps) => {
 
     return (
         <Card>
-            <h4 className="mb-6">Overview</h4>
+            <h4 className="mb-6">Company Overview</h4>
             <div className="grid md:grid-cols-2 gap-4">
                 <FormItem
-                    label="First Name"
+                    label="Company Name"
                     invalid={Boolean(errors.firstName)}
                     errorMessage={errors.firstName?.message}
                 >
@@ -91,7 +90,7 @@ const OverviewSection = ({ control, errors }: OverviewSectionProps) => {
                     />
                 </FormItem>
                 <FormItem
-                    label="User Name"
+                    label="PIC Name"
                     invalid={Boolean(errors.lastName)}
                     errorMessage={errors.lastName?.message}
                 >
@@ -127,58 +126,38 @@ const OverviewSection = ({ control, errors }: OverviewSectionProps) => {
                     )}
                 />
             </FormItem>
-            <div className="flex items-end gap-4 w-full">
-                <FormItem
-                    invalid={
-                        Boolean(errors.phoneNumber) || Boolean(errors.dialCode)
-                    }
-                >
-                    <label className="form-label mb-2">Phone number</label>
-                    <Controller
-                        name="dialCode"
-                        control={control}
-                        render={({ field }) => (
-                            <Select<CountryOption>
-                                options={dialCodeList}
-                                {...field}
-                                className="w-[150px]"
-                                components={{
-                                    Option: CustomSelectOption,
-                                    Control: CustomControl,
-                                }}
-                                placeholder=""
-                                value={dialCodeList.filter(
-                                    (option) => option.dialCode === field.value,
-                                )}
-                                onChange={(option) =>
-                                    field.onChange(option?.dialCode)
-                                }
-                            />
-                        )}
-                    />
-                </FormItem>
-                <FormItem
-                    className="w-full"
-                    invalid={
-                        Boolean(errors.phoneNumber) || Boolean(errors.dialCode)
-                    }
-                    errorMessage={errors.phoneNumber?.message}
-                >
-                    <Controller
-                        name="phoneNumber"
-                        control={control}
-                        render={({ field }) => (
-                            <NumericInput
-                                autoComplete="off"
-                                placeholder="Phone Number"
-                                value={field.value}
-                                onChange={field.onChange}
-                                onBlur={field.onBlur}
-                            />
-                        )}
-                    />
-                </FormItem>
-            </div>
+
+            <FormItem
+                invalid={
+                    Boolean(errors.phoneNumber) || Boolean(errors.dialCode)
+                }
+            >
+                <label className="form-label mb-2">PIC Role</label>
+                <Controller
+                    name="dialCode"
+                    control={control}
+                    render={({ field }) => (
+                        <Select<CountryOption>
+                            options={dialCodeList}
+                            {...field}
+                            className="w-full"
+                            components={{
+                                Option: CustomSelectOption,
+                                Control: CustomControl,
+                            }}
+                            placeholder=""
+                            value={dialCodeList.filter(
+                                (option) => option.dialCode === field.value,
+                            )}
+                            onChange={(option) =>
+                                field.onChange(option?.dialCode)
+                            }
+                        />
+                    )}
+                />
+            </FormItem>
+            <label className="form-label mb-2">Meeting Date</label>
+            <DatePicker />
         </Card>
     )
 }

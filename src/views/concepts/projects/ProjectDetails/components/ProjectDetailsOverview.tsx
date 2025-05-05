@@ -53,7 +53,7 @@ const ProjectDetailsOverview = (props: ProjectDetailsOverviewProps) => {
                         </div>
                         <div className="flex flex-col gap-3">
                             <div className="font-semibold heading-text">
-                                Skate holder:
+                                Stake holder:
                             </div>
                             <div className="flex items-center gap-2">
                                 <Avatar

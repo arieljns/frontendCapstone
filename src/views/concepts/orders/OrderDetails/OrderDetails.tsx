@@ -9,6 +9,7 @@ import useSWR from 'swr'
 import { useParams } from 'react-router-dom'
 import type { GetOrderDetailsResponse } from './types'
 
+
 const OrderDetails = () => {
     const { id } = useParams()
 
@@ -37,6 +38,7 @@ const OrderDetails = () => {
                                 activities={data.activity}
                                 progressStatus={data.progressStatus}
                             />
+                      
                         </div>
                         <div className="lg:w-[320px] xl:w-[420px] gap-4 flex flex-col">
                             <OrderDetailCustomer customer={data.customer} />

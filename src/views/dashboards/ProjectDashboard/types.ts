@@ -23,6 +23,7 @@ export type Activities = Array<{
 }>
 
 export type Project = {
+    id: number
     ongoingProject: number
     projectCompleted: number
     upcomingProject: number
@@ -46,10 +47,6 @@ export type Task = {
     checked: boolean
     progress: string
     priority: string
-    assignee: {
-        name: string
-        img: string
-    }
 }
 
 export type GetProjectDashboardResponse = {

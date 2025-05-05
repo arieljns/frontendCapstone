@@ -1,10 +1,5 @@
-export type Member = {
-    name: string
-    img: string
-}
-
 export type Project = {
-    id: string
+    id:string
     name: string
     category?: string
     desc: string
@@ -14,22 +9,15 @@ export type Project = {
     progression: number
     dayleft?: number
     favourite?: boolean
-    member: Member[]
+    companySize: string
+    notes: string
+    picName: string
+    picRole: string[]
+    currentSystem: string[]
+    systemRequirement: string[]
+    budget: number
 }
 
 export type ProjectList = Project[]
 
-export type Members = (Member & { id: string })[]
-
 export type GetProjectListResponse = ProjectList
-
-export type MemberListOption = {
-    value: string
-    label: string
-    img: string
-}
-
-export type GetProjectMembersResponse = {
-    participantMembers: Members
-    allMembers: Members
-}

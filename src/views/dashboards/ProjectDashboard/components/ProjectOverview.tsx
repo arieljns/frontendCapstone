@@ -1,7 +1,5 @@
-import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import classNames from '@/utils/classNames'
-import { Link } from 'react-router-dom'
 import { TbProgressBolt, TbCopyCheck, TbArrowDownToArc } from 'react-icons/tb'
 import { Project } from '../types'
 import type { ReactNode } from 'react'
@@ -50,31 +48,26 @@ const StatisticCard = ({
 const ProjectOverview = ({ data }: ProjectOverview) => {
     return (
         <Card>
-            <div className="flex items-center justify-between">
-                <h4>Overview</h4>
-                <Link to="/concepts/projects/project-list">
-                    <Button asElement="div" size="sm">
-                        All projects
-                    </Button>
-                </Link>
+            <div className="flex items-center  justify-between">
+                <h4>Before Meeting</h4>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-2xl mt-4">
                 <StatisticCard
-                    title="Ongoing project"
+                    title="Ongoing Meeting"
                     className="bg-sky-100 dark:bg-opacity-75"
-                    value={data.ongoingProject}
+                    value={54}
                     icon={<TbProgressBolt />}
                 />
                 <StatisticCard
-                    title="Project completed"
+                    title="Meeting Completed"
                     className="bg-emerald-100 dark:bg-opacity-75"
-                    value={data.projectCompleted}
+                    value={40}
                     icon={<TbCopyCheck />}
                 />
                 <StatisticCard
-                    title="Upcoming project"
+                    title="Upcoming Meeting"
                     className="bg-purple-100 dark:bg-opacity-75"
-                    value={data.upcomingProject}
+                    value={72}
                     icon={<TbArrowDownToArc />}
                 />
             </div>

@@ -84,7 +84,7 @@ export const notificationListData = [
 
 export const searchQueryPoolData = [
     {
-        key: 'dashboard.ecommerce',
+        key: 'dashboard',
         path: `${DASHBOARDS_PREFIX_PATH}/ecommerce`,
         title: 'Ecommerce',
         icon: 'dashboardEcommerce',
@@ -100,8 +100,8 @@ export const searchQueryPoolData = [
         categoryTitle: 'Dashboard',
     },
     {
-        key: 'dashboard.marketing',
-        path: `${DASHBOARDS_PREFIX_PATH}/marketing`,
+        key: 'dashboard.after.meeting',
+        path: `${DASHBOARDS_PREFIX_PATH}/after-meeting`,
         title: 'Marketing',
         icon: 'dashboardMarketing',
         category: 'Dashboard',
@@ -524,7 +524,7 @@ export const searchQueryPoolData = [
         categoryTitle: 'Concepts',
     },
     {
-        key: 'concepts.projects.scrumBoard',
+        key: 'concepts.projects.kanban.board',
         path: `${CONCEPTS_PREFIX_PATH}/projects/scrum-board`,
         title: 'Scrum Board',
         icon: 'projectScrumBoard',
@@ -716,7 +716,7 @@ export const searchQueryPoolData = [
         categoryTitle: 'Concepts',
     },
     {
-        key: 'concepts.calendar',
+        key: 'concepts.date.calendar',
         path: `${CONCEPTS_PREFIX_PATH}/calendar`,
         title: 'Calendar',
         icon: 'calendar',

@@ -10,7 +10,7 @@ type OrderDetailProductsProps = {
 const OrderDetailProducts = ({ products }: OrderDetailProductsProps) => {
     return (
         <Card>
-            <h4 className="mb-4">Products ordered</h4>
+            <h4 className="mb-4">Package ordered</h4>
             <div className="flex flex-col gap-4">
                 {products?.map((product) => (
                     <div
@@ -35,7 +35,7 @@ const OrderDetailProducts = ({ products }: OrderDetailProductsProps) => {
                                 <div className="heading-text font-bold">
                                     <NumericFormat
                                         fixedDecimalScale
-                                        prefix="$"
+                                        prefix="Rp "
                                         displayType="text"
                                         value={product.price}
                                         decimalScale={2}

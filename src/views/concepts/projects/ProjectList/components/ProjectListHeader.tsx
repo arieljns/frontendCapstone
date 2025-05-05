@@ -6,8 +6,13 @@ import { useProjectListStore } from '../store/projectListStore'
 import { apiGetProjectMembers } from '@/services/ProjectService'
 import useSWR from 'swr'
 import type { GetProjectMembersResponse } from '../types'
+import UploadFile from '@/views/concepts/files/FileManager/components/UploadFile'
 
-const ProjectListHeader = () => {
+type ProjectListHeaderProps = {
+    options: boolean
+}
+
+export const ProjectListHeader = ({ options }: ProjectListHeaderProps) => {
     const [dialogOpen, setDialogOpen] = useState(false)
 
     const { setMembers } = useProjectListStore()
@@ -32,16 +37,27 @@ const ProjectListHeader = () => {
 
     return (
         <>
-            <div className="flex items-center justify-between gap-4">
-                <h3>Projects</h3>
-                <div>
-                    <Button variant="solid" onClick={() => setDialogOpen(true)}>
-                        Create project
-                    </Button>
+            {options ? (
+                <div className="flex items-center justify-between gap-4 mb-4">
+                    <h3>After Meetings</h3>
                 </div>
-            </div>
+            ) : (
+                <div className="flex items-center justify-between gap-4 mb-4">
+                    <h3>Before Meetings</h3>
+                    <div className='flex items-center justify-between gap-3'>
+                        <UploadFile />
+                        <Button
+                            variant="solid"
+                            onClick={() => setDialogOpen(true)}
+                        >
+                            Create Meeting
+                        </Button>
+                    </div>
+                </div>
+            )}
+
             <Dialog isOpen={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <h4>Add new project</h4>
+                <h4>Create New Meeting</h4>
                 <div className="mt-4">
                     <NewProjectForm onClose={() => setDialogOpen(false)} />
                 </div>

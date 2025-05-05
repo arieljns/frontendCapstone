@@ -68,11 +68,11 @@ const Metrics = ({ data, selectedPeriod }: MetricsProps) => {
     return (
         <div className="flex flex-col 2xl:flex-col xl:flex-row gap-4">
             <Widget
-                title="Visitor"
+                title="Deals Closed"
                 value={
                     <NumericFormat
                         displayType="text"
-                        value={data.visitors.value}
+                        value={900}
                         thousandSeparator={true}
                     />
                 }
@@ -90,7 +90,7 @@ const Metrics = ({ data, selectedPeriod }: MetricsProps) => {
                 iconClass="bg-emerald-200"
             />
             <Widget
-                title="Ad campaign clicks"
+                title="Customer Engagement"
                 value={
                     <NumericFormat
                         displayType="text"

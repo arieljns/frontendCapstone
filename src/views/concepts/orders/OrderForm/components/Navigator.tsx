@@ -5,8 +5,8 @@ import { TbPackage, TbUserSquare, TbMapPin, TbCreditCard } from 'react-icons/tb'
 
 const navigationList = [
     {
-        label: 'Select products',
-        description: 'Add product to purchase list.',
+        label: 'Select Packages',
+        description: 'Add package to the list.',
         link: 'selectProducts',
         icon: <TbPackage />,
     },

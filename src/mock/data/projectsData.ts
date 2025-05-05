@@ -27,9 +27,9 @@ export const projectDetailsData = {
 export const projectListData = [
     {
         id: '27',
-        name: 'EVO SaaS',
-        category: 'Web Application',
-        desc: 'Most of you are familiar with the virtues of a programmer',
+        name: 'PT Tri Jaya Coco',
+        category: 'Web ',
+        desc: 'Export Trading Company',
         attachmentCount: 12,
         totalTask: 32,
         completedTask: 27,

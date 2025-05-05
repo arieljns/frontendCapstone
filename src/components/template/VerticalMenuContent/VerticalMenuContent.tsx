@@ -1,6 +1,7 @@
 import { useState, useEffect, Fragment } from 'react'
 import Menu from '@/components/ui/Menu'
 import VerticalSingleMenuItem from './VerticalSingleMenuItem'
+import dashboardsNavigationConfig from '@/configs/navigation.config/dashboards.navigation.config'
 import VerticalCollapsedMenuItem from './VerticalCollapsedMenuItem'
 import AuthorityCheck from '@/components/shared/AuthorityCheck'
 import { themeConfig } from '@/configs/theme.config'
@@ -24,6 +25,17 @@ export interface VerticalMenuContentProps {
     translationSetup?: boolean
     userAuthority: string[]
 }
+
+const dashboardKeys = new Set<string>()
+function collectNavKeys(navList: NavigationTree[]) {
+    for (const nav of navList) {
+        dashboardKeys.add(nav.key)
+        if (nav.subMenu) {
+            collectNavKeys(nav.subMenu)
+        }
+    }
+}
+collectNavKeys(dashboardsNavigationConfig)
 
 const { MenuGroup } = Menu
 
@@ -108,22 +120,34 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
                                     )}
                             </VerticalCollapsedMenuItem>
                         )}
-                        {nav.type === NAV_ITEM_TYPE_TITLE && (
-                            <AuthorityCheck userAuthority={userAuthority} authority={nav.authority}>
-                                <MenuGroup
-                                    key={nav.key}
-                                    label={t(nav.translateKey) || nav.title}
+                        {nav.type === NAV_ITEM_TYPE_TITLE &&
+                            nav.subMenu?.some((child) =>
+                                dashboardKeys.has(child.key),
+                            ) && (
+                                <AuthorityCheck
+                                    userAuthority={userAuthority}
+                                    authority={nav.authority}
                                 >
-                                    {nav.subMenu &&
-                                        nav.subMenu.length > 0 &&
-                                        renderNavigation(
-                                            nav.subMenu,
-                                            cascade,
-                                            false,
-                                        )}
-                                </MenuGroup>
-                            </AuthorityCheck>
-                        )}
+                                    <MenuGroup
+                                        key={nav.key}
+                                        label={t(nav.translateKey) || nav.title}
+                                    >
+                                        {nav.subMenu &&
+                                            nav.subMenu.filter((child) =>
+                                                dashboardKeys.has(child.key),
+                                            ).length > 0 &&
+                                            renderNavigation(
+                                                nav.subMenu.filter((child) =>
+                                                    dashboardKeys.has(
+                                                        child.key,
+                                                    ),
+                                                ),
+                                                cascade,
+                                                false,
+                                            )}
+                                    </MenuGroup>
+                                </AuthorityCheck>
+                            )}
                     </Fragment>
                 ))}
             </>

@@ -2,8 +2,8 @@ import ApiService from './ApiService'
 
 export async function apiGetProjects<T>() {
     return ApiService.fetchDataWithAxios<T>({
-        url: '/projects',
-        method: 'get',
+        url: '/before',
+        method: 'GET',
     })
 }
 
@@ -11,12 +11,21 @@ export async function apiPostProject<T, U extends Record<string, unknown>>(
     data: U,
 ) {
     return ApiService.fetchDataWithAxios<T>({
-        url: '/projects',
-        method: 'post',
+        url: '/before',
+        method: 'POST',
         data,
     })
 }
-
+export async function apiDeleteProject<T, U extends Record<string, unknown>>({
+    id,
+    ...params
+}: U) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: `/before/${id}`,
+        method: 'DELETE',
+        params,
+    })
+}
 export async function apiGetProject<T, U extends Record<string, unknown>>({
     id,
     ...params

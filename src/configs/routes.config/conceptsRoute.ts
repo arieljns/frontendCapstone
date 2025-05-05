@@ -14,6 +14,15 @@ const conceptsRoute: Routes = [
         },
     },
     {
+        key: 'concepts.quotation',
+        path: `${CONCEPTS_PREFIX_PATH}/quotation`,
+        component: lazy(() => import('@/views/concepts/quotations/Quotation')),
+        authority: [ADMIN, USER],
+        meta: {
+            pageContainerType: 'contained',
+        },
+    },
+    {
         key: 'concepts.ai.image',
         path: `${CONCEPTS_PREFIX_PATH}/ai/image`,
         component: lazy(() => import('@/views/concepts/ai/Image')),

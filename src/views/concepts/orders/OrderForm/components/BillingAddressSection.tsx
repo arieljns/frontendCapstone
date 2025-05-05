@@ -60,7 +60,7 @@ const BillingAddressSection = ({
 }: BillingAddressSectionProps) => {
     return (
         <Card id="addressInformation">
-            <h4 className="mb-6">Address Information</h4>
+            <h4 className="mb-6">Follow Up</h4>
             <FormItem
                 label="Country"
                 invalid={Boolean(errors.country)}

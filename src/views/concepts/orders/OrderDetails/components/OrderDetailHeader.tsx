@@ -1,9 +1,5 @@
-import { useParams } from 'react-router-dom'
-
 const OrderDetailHeader = () => {
-    const { id } = useParams()
-
-    return <h3>Order: #{id}</h3>
+    return <h3>Order: PT Tri Jaya Coco</h3>
 }
 
 export default OrderDetailHeader

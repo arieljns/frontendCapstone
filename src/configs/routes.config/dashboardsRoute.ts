@@ -5,7 +5,7 @@ import type { Routes } from '@/@types/routes'
 
 const dashboardsRoute: Routes = [
     {
-        key: 'dashboard.ecommerce',
+        key: 'dashboard',
         path: `${DASHBOARDS_PREFIX_PATH}/ecommerce`,
         component: lazy(() => import('@/views/dashboards/EcommerceDashboard')),
         authority: [ADMIN, USER],
@@ -15,7 +15,7 @@ const dashboardsRoute: Routes = [
     },
     {
         key: 'dashboard.project',
-        path: `${DASHBOARDS_PREFIX_PATH}/project`,
+        path: `${DASHBOARDS_PREFIX_PATH}/meeting-features`,
         component: lazy(() => import('@/views/dashboards/ProjectDashboard')),
         authority: [ADMIN, USER],
         meta: {
@@ -35,6 +35,16 @@ const dashboardsRoute: Routes = [
         key: 'dashboard.analytic',
         path: `${DASHBOARDS_PREFIX_PATH}/analytic`,
         component: lazy(() => import('@/views/dashboards/AnalyticDashboard')),
+        authority: [ADMIN, USER],
+        meta: {
+            pageContainerType: 'contained',
+            pageBackgroundType: 'plain',
+        },
+    },
+    {
+        key: 'dashboard.after.meeting',
+        path: `${DASHBOARDS_PREFIX_PATH}/after-meeting`,
+        component: lazy(() => import('@/views/dashboards/AfterMeetingDashboard')),
         authority: [ADMIN, USER],
         meta: {
             pageContainerType: 'contained',

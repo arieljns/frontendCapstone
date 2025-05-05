@@ -42,15 +42,10 @@ const SalesTarget = ({ data }: SalesTargetProps) => {
             <div className="flex items-center justify-between mt-8">
                 <div className="flex flex-col">
                     <h2>
-                        <AbbreviateNumber
-                            value={data[selectedPeriod].achieved}
-                        />
+                        <AbbreviateNumber value={15000000} />
                         <span className="opacity-60 text-base font-bold">
                             {' / '}
-                            <AbbreviateNumber
-                                value={data[selectedPeriod].target}
-                            />{' '}
-                            Units
+                            <AbbreviateNumber value={18000000} />{' '}
                         </span>
                     </h2>
                     <div className="mt-1">
@@ -59,7 +54,7 @@ const SalesTarget = ({ data }: SalesTargetProps) => {
                 </div>
                 <div>
                     <Progress
-                        percent={data[selectedPeriod].percentage}
+                        percent={89}
                         width={80}
                         variant="circle"
                         strokeWidth={8}

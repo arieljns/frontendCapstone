@@ -6,6 +6,7 @@ import toast from '@/components/ui/toast'
 import Notification from '@/components/ui/Notification'
 import UploadMedia from '@/assets/svg/UploadMedia'
 import sleep from '@/utils/sleep'
+import { FaFileCsv } from 'react-icons/fa'
 
 const UploadFile = () => {
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
@@ -29,8 +30,15 @@ const UploadFile = () => {
 
     return (
         <>
-            <Button variant="solid" onClick={() => setUploadDialogOpen(true)}>
-                Upload
+            <Button
+                className="flex gap-1 items-center "
+                variant="default"
+                onClick={() => setUploadDialogOpen(true)}
+            >
+                <FaFileCsv size={18} />
+                <div>
+                    Upload From <span className="text-green-600">CSV</span>
+                </div>
             </Button>
             <Dialog
                 isOpen={uploadDialogOpen}
@@ -67,7 +75,7 @@ const UploadFile = () => {
                         disabled={uploadedFiles.length === 0}
                         onClick={handleUpload}
                     >
-                        Upload
+                        upload
                     </Button>
                 </div>
             </Dialog>

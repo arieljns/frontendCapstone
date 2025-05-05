@@ -133,10 +133,35 @@ const PaymentMethodSection = ({
                     )}
                 />
             </FormItem>
+            <FormItem
+                label="Term In"
+                invalid={Boolean(errors.paymentMethod)}
+                errorMessage={errors.paymentMethod?.message}
+            >
+                <Controller
+                    name="paymentMethod"
+                    control={control}
+                    render={({ field }) => (
+                        <Select<PaymentMethodOption>
+                            options={paymentMethodOptions}
+                            {...field}
+                            components={{
+                                Option: CustomSelectOption,
+                                Control: CustomControl,
+                            }}
+                            placeholder=""
+                            value={paymentMethodOptions.filter(
+                                (option) => option.value === field.value,
+                            )}
+                            onChange={(option) => field.onChange(option?.value)}
+                        />
+                    )}
+                />
+            </FormItem>
             {selectedPaymentMethod === 'creditOrDebitCard' && (
                 <>
                     <FormItem
-                        label="User Name"
+                        label="Stake Holder"
                         invalid={Boolean(
                             (errors as CreditCardFieldError).cardHolderName,
                         )}
@@ -200,30 +225,6 @@ const PaymentMethodSection = ({
                                     <FormCustomFormatInput
                                         placeholder="••/••"
                                         format={cardExpiryFormat}
-                                        value={field.value}
-                                        onValueChange={(e) => {
-                                            field.onChange(e.value)
-                                        }}
-                                    />
-                                )}
-                            />
-                        </FormItem>
-                        <FormItem
-                            label="CVV"
-                            invalid={Boolean(
-                                (errors as CreditCardFieldError).code,
-                            )}
-                            errorMessage={
-                                (errors as CreditCardFieldError).code?.message
-                            }
-                        >
-                            <Controller
-                                name="code"
-                                control={control}
-                                render={({ field }) => (
-                                    <FormPatternInput
-                                        placeholder="•••"
-                                        format="###"
                                         value={field.value}
                                         onValueChange={(e) => {
                                             field.onChange(e.value)

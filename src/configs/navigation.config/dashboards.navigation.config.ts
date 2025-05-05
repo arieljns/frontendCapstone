@@ -1,4 +1,7 @@
-import { DASHBOARDS_PREFIX_PATH } from '@/constants/route.constant'
+import {
+    DASHBOARDS_PREFIX_PATH,
+    CONCEPTS_PREFIX_PATH,
+} from '@/constants/route.constant'
 import {
     NAV_ITEM_TYPE_TITLE,
     NAV_ITEM_TYPE_ITEM,
@@ -10,7 +13,7 @@ const dashboardsNavigationConfig: NavigationTree[] = [
     {
         key: 'dashboard',
         path: '',
-        title: 'Dashboard',
+        title: 'dashboard',
         translateKey: 'nav.dashboard.dashboard',
         icon: 'dashboard',
         type: NAV_ITEM_TYPE_TITLE,
@@ -22,45 +25,90 @@ const dashboardsNavigationConfig: NavigationTree[] = [
         },
         subMenu: [
             {
-                key: 'dashboard.ecommerce',
+                key: 'dashboard',
                 path: `${DASHBOARDS_PREFIX_PATH}/ecommerce`,
-                title: 'Sales',
+                title: 'Dashboard',
                 translateKey: 'nav.dashboard.ecommerce',
-                icon: 'dashboardEcommerce',
+                icon: 'dashboard',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN, USER],
                 subMenu: [],
             },
             {
                 key: 'dashboard.project',
-                path: `${DASHBOARDS_PREFIX_PATH}/project`,
-                title: 'Dunno',
+                path: `${DASHBOARDS_PREFIX_PATH}/meeting-features`,
+                title: 'Meeting Features',
                 translateKey: 'nav.dashboard.project',
-                icon: 'dashboardProject',
+                icon: 'dashboardBeforeMeeting',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN, USER],
                 subMenu: [],
             },
             {
-                key: 'dashboard.marketing',
-                path: `${DASHBOARDS_PREFIX_PATH}/marketing`,
-                title: 'Marketing',
-                translateKey: 'nav.dashboard.marketing',
-                icon: 'dashboardMarketing',
+                key: 'dashboard.after.meeting',
+                path: `${DASHBOARDS_PREFIX_PATH}/after-meeting`,
+                title: 'Meeting Debrief',
+                translateKey: 'nav.after-meeting',
+                icon: 'dashboardAfterMeeting',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN, USER],
+                meta: {
+                    description: {
+                        translateKey: 'nav.calendarDesc',
+                        label: 'Schedule and events',
+                    },
+                },
                 subMenu: [],
             },
             {
-                key: 'dashboard.analytic',
-                path: `${DASHBOARDS_PREFIX_PATH}/analytic`,
-                title: 'Analytic',
-                translateKey: 'nav.dashboard.analytic',
-                icon: 'dashboardAnalytic',
+                key: 'concepts.ai.chat',
+                path: `${CONCEPTS_PREFIX_PATH}/ai/chat`,
+                title: 'AI Agent',
+                translateKey: 'nav.conceptsAi.chat',
+                icon: 'ai',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [ADMIN, USER],
+                meta: {
+                    description: {
+                        translateKey: 'nav.conceptsAi.chatDesc',
+                        label: 'AI-powered chat systems',
+                    },
+                },
                 subMenu: [],
             },
+            {
+                key: 'concepts.projects.kanban.board',
+                path: `${CONCEPTS_PREFIX_PATH}/projects/scrum-board`,
+                title: 'Kanban Board',
+                translateKey: 'nav.conceptsProjects.scrumBoard',
+                icon: 'projectScrumBoard',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN, USER],
+                meta: {
+                    description: {
+                        translateKey: 'nav.conceptsProjects.scrumBoardDesc',
+                        label: 'Manage your scrum workflow',
+                    },
+                },
+                subMenu: [],
+            },
+            {
+                key: 'concepts.date.calendar',
+                path: `${CONCEPTS_PREFIX_PATH}/calendar`,
+                title: 'Calendar',
+                translateKey: 'nav.calendar',
+                icon: 'calendar',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN, USER],
+                meta: {
+                    description: {
+                        translateKey: 'nav.calendarDesc',
+                        label: 'Schedule and events',
+                    },
+                },
+                subMenu: [],
+            },
+            
         ],
     },
 ]
