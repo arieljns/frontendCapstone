@@ -15,7 +15,7 @@ const conceptsRoute: Routes = [
     },
     {
         key: 'concepts.quotation',
-        path: `${CONCEPTS_PREFIX_PATH}/quotation`,
+        path: `${CONCEPTS_PREFIX_PATH}/quotation/:id`,
         component: lazy(() => import('@/views/concepts/quotations/Quotation')),
         authority: [ADMIN, USER],
         meta: {
@@ -197,7 +197,7 @@ const conceptsRoute: Routes = [
     },
     {
         key: 'concepts.orders.orderCreate',
-        path: `${CONCEPTS_PREFIX_PATH}/orders/order-create`,
+        path: `${CONCEPTS_PREFIX_PATH}/orders/order-create/:id`,
         component: lazy(() => import('@/views/concepts/orders/OrderCreate')),
         authority: [ADMIN, USER],
         meta: {

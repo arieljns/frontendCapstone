@@ -28,7 +28,6 @@ const ProjectDashboard = () => {
                             <ProjectListHeader options={false} />
                             <ProjectOverview data={data.projectOverview} />
                             <ProjectListContent type="before" />
-                            
                         </div>
                         <div>
                             <UpcomingSchedule />

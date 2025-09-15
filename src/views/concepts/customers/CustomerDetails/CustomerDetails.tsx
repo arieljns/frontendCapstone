@@ -2,11 +2,11 @@ import Card from '@/components/ui/Card'
 import Tabs from '@/components/ui/Tabs'
 import Loading from '@/components/shared/Loading'
 import BillingSection from './BillingSection'
-import { apiGetCustomer } from '@/services/CustomersService'
+import { apiGetCustomerById } from '@/services/DashboardService'
 import useSWR from 'swr'
 import { useParams } from 'react-router-dom'
 import isEmpty from 'lodash/isEmpty'
-import type { Customer } from '../CustomerList/types'
+import type { Project } from '@/views/concepts/projects/ProjectList/types'
 import CustomerEdit from '../CustomerEdit'
 
 const { TabNav, TabList, TabContent } = Tabs
@@ -15,9 +15,9 @@ const CustomerDetails = () => {
     const { id } = useParams()
 
     const { data, isLoading } = useSWR(
-        ['/api/customers', { id: id as string }],
+        [`/before/${id}`, { id: id as string }],
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, params]) => apiGetCustomer<Customer, { id: string }>(params),
+        ([_, params]) => apiGetCustomerById<Project, { id: string }>(params),
         {
             revalidateOnFocus: false,
             revalidateIfStale: false,
@@ -37,8 +37,7 @@ const CustomerDetails = () => {
                             </TabList>
                             <div className="p-4">
                                 <TabContent value="activity">
-                                    <CustomerEdit />
-                                    
+                                    <CustomerEdit customerData={data}/>
                                 </TabContent>
                                 <TabContent value="billing">
                                     <BillingSection data={data} />

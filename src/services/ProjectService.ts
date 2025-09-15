@@ -16,6 +16,15 @@ export async function apiPostProject<T, U extends Record<string, unknown>>(
         data,
     })
 }
+export async function apiPostCsvData<T, U extends Record<string, unknown>>(
+    data: U,
+) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: '/before/csv',
+        method: 'POST',
+        data,
+    })
+}
 export async function apiDeleteProject<T, U extends Record<string, unknown>>({
     id,
     ...params
@@ -26,6 +35,18 @@ export async function apiDeleteProject<T, U extends Record<string, unknown>>({
         params,
     })
 }
+
+export async function apiMoveMeetingStage<
+    T,
+    U extends Record<string, unknown>,
+>({ id, ...params }: U) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: `/before/${id}/move-stage`,
+        method: 'PATCH',
+        params,
+    })
+}
+
 export async function apiGetProject<T, U extends Record<string, unknown>>({
     id,
     ...params

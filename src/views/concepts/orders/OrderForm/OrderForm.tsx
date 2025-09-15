@@ -7,7 +7,7 @@ import BottomStickyBar from '@/components/template/BottomStickyBar'
 import { apiGetProductList } from '@/services/ProductService'
 import ProductSelectSection from './components/ProductSelectSection'
 import CustomerDetailSection from './components/CustomerDetailSection'
-import BillingAddressSection from './components/BillingAddressSection'
+import FollowupSection from './components/FollowupSection'
 import PaymentMethodSection from './components/PaymentMethodSection'
 import Navigator from './components/Navigator'
 import { useOrderFormStore } from './store/orderFormStore'
@@ -26,6 +26,8 @@ import type {
     SelectedProduct,
 } from './types'
 import type { TableQueries, CommonProps } from '@/@types/common'
+import { listOfProducts } from '@/constants/products.constant'
+import { useProjectListStore } from '../../projects/ProjectList/store/projectListStore'
 
 type OrderFormProps = {
     children: ReactNode
@@ -35,90 +37,41 @@ type OrderFormProps = {
     newOrder?: boolean
 } & CommonProps
 
-const baseValidationSchema = z.object({
-    firstName: z.string().min(1, { message: 'First name required' }),
-    lastName: z.string().min(1, { message: 'Last name required' }),
-    email: z
-        .string()
-        .min(1, { message: 'Email required' })
-        .email({ message: 'Invalid email' }),
-    dialCode: z.string().min(1, { message: 'Please select your country code' }),
-    phoneNumber: z
-        .string()
-        .min(1, { message: 'Please input your mobile number' }),
-    country: z.string().min(1, { message: 'Please select a country' }),
-    address: z.string().min(1, { message: 'Addrress required' }),
-    postcode: z.string().min(1, { message: 'Postcode required' }),
-    city: z.string().min(1, { message: 'City required' }),
+const SelectedProductSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1, 'Product name cannot be empty'),
+    price: z.number().nonnegative('Price must be 0 or greater'),
+    img: z.string().url('Image URL must be valid'),
+    productCode: z.string().min(1, 'Product code cannot be empty'),
 })
 
-const validationSchema: ZodType<OrderFormSchema> = z.discriminatedUnion(
-    'paymentMethod',
-    [
-        z
-            .object({
-                paymentMethod: z.literal('creditOrDebitCard'),
-                cardHolderName: z
-                    .string()
-                    .min(1, { message: 'Card holder name required' }),
-                ccNumber: z
-                    .string()
-                    .min(1, 'Credit card number required')
-                    .refine(
-                        (value) =>
-                            /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/.test(
-                                value,
-                            ),
-                        'Invalid credit card number',
-                    ),
-                cardExpiry: z
-                    .string()
-                    .min(1, { message: 'Card holder name required' })
-                    .refine(
-                        (value) =>
-                            /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/.test(
-                                value,
-                            ),
-                        'Invalid Date',
-                    ),
-                code: z
-                    .string()
-                    .min(1, { message: 'Code required' })
-                    .refine((value) => /^[0-9]{3}$/.test(value), 'Invalid CVV'),
-            })
-            .merge(baseValidationSchema),
-        z
-            .object({
-                paymentMethod: z.literal('paypal'),
-                paypalEmail: z
-                    .string()
-                    .min(1, { message: 'Email required' })
-                    .email({ message: 'Invalid email' }),
-            })
-            .merge(baseValidationSchema),
-        z
-            .object({
-                paymentMethod: z.literal('bankTransfer'),
-                bankName: z.string().min(1, { message: 'Bank name required' }),
-                accountNumber: z
-                    .string()
-                    .min(1, { message: 'Account number required' }),
-                accountHolderName: z
-                    .string()
-                    .min(1, { message: 'Account holder name required' }),
-                IBAN: z.string().min(1, { message: 'IBAN required' }),
-            })
-            .merge(baseValidationSchema),
-        z
-            .object({
-                paymentMethod: z.literal(''),
-            })
-            .merge(baseValidationSchema),
-    ],
-)
+const baseValidationSchema = z.object({
+    sentiment: z.string().min(1, { message: 'Sentiment required' }),
+    status: z.string().min(1, { message: 'Status required' }),
+    excitementLevel: z
+        .string()
+        .min(1, { message: 'Excitement level required' }),
+    promo: z.string().min(1, { message: 'Promo required' }),
+    decisionMaker: z.string().min(1, { message: 'Decision maker required' }),
+    activationAgreement: z
+        .string()
+        .min(1, { message: 'activation agreement required ' }),
+    expiredDate: z.date(),
+    products: z.array(SelectedProductSchema).min(1, {
+        message: 'At least one product is required',
+    }),
+    totalEmployee: z.coerce
+        .number()
+        .min(1, { message: 'Total Employee must exist' }),
+    discountRate: z.string().min(1, { message: 'Discount Rate Required' }),
+    termIn: z.string().min(1, { message: 'Term In required' }),
+})
 
 const OrderForm = (props: OrderFormProps) => {
     const { onFormSubmit, children, defaultValues, defaultProducts } = props
+    const { projectList } = useProjectListStore()
+
+    console.log(projectList)
 
     const { setProductOption, setProductList, setSelectedProduct } =
         useOrderFormStore()
@@ -147,11 +100,10 @@ const OrderForm = (props: OrderFormProps) => {
             revalidateOnFocus: false,
             onSuccess: (resp) => {
                 const list = resp.list.map(
-                    ({ id: value, name: label, img, stock: quantity }) => ({
+                    ({ id: value, name: label, img }) => ({
                         label,
                         value,
                         img,
-                        quantity,
                     }),
                 )
                 setProductList(resp.list)
@@ -174,7 +126,12 @@ const OrderForm = (props: OrderFormProps) => {
     }, [])
 
     const onSubmit = (values: OrderFormSchema) => {
+        console.log('Form submitted with values:', values)
         onFormSubmit?.(values)
+    }
+
+    const onError = (errors: typeof errors) => {
+        console.error('Form submission errors:', errors)
     }
 
     const {
@@ -184,20 +141,37 @@ const OrderForm = (props: OrderFormProps) => {
         formState: { errors },
         control,
     } = useForm<OrderFormSchema>({
-        defaultValues: {
-            paymentMethod: 'creditOrDebitCard',
-            ...(defaultValues ? defaultValues : {}),
-        },
-        resolver: zodResolver(validationSchema),
+        // defaultValues: {
+        //     paymentMethod: 'creditOrDebitCard',
+        //     ...(defaultValues ? defaultValues : {}),
+        // },
+        resolver: zodResolver(baseValidationSchema),
     })
 
+    const productOption = listOfProducts.map((product) => ({
+        label: product.name,
+        value: product.id,
+        img: product.img,
+    }))
+
+    const products = watch('products')
+
+    const formValues = watch()
+
+    useEffect(() => {
+        console.log('Form Values', formValues)
+    }, [formValues])
+
+    useEffect(() => {
+        console.log('Products watched:', products)
+    }, [products])
     const selectedPaymentMethod = watch('paymentMethod', '')
 
     return (
         <div className="flex">
             <Form
                 className="flex-1 flex flex-col overflow-hidden"
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(onSubmit, onError)}
             >
                 <Container>
                     <div className="flex gap-4">
@@ -213,21 +187,20 @@ const OrderForm = (props: OrderFormProps) => {
 
                         <div className="flex-1">
                             <div className="flex flex-col gap-4">
-                                <ProductSelectSection />
+                                <ProductSelectSection
+                                    control={control}
+                                    productList={listOfProducts}
+                                    productOption={productOption}
+                                    watch={watch}
+                                    errors={errors}
+                                />
                                 <CustomerDetailSection
                                     control={control}
                                     errors={errors}
                                 />
-                                <BillingAddressSection
+                                <FollowupSection
                                     control={control}
                                     errors={errors}
-                                />
-                                <PaymentMethodSection
-                                    control={control}
-                                    errors={errors}
-                                    selectedPaymentMethod={
-                                        selectedPaymentMethod
-                                    }
                                 />
                             </div>
                         </div>

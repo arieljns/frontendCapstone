@@ -65,3 +65,19 @@ export type Customer = {
     subscription: Subscription[]
     totalSpending: number
 }
+
+
+export type Meeting = {
+    id: string
+    name: string
+    desc: string
+    notes: string
+    budget: number
+    companySize: number
+    picName: string
+    picRole: string[]
+    currentSystem: string[]
+    systemRequirement: string[]
+    totalTask: number
+    completedTask: number
+}

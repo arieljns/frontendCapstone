@@ -1,0 +1,39 @@
+@media print {
+  .print-page {
+    page-break-after: always;
+    break-inside: avoid;
+  }
+
+  .print-page > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 297mm;
+    height: 297mm;
+    box-sizing: border-box;
+  }
+
+  .quotation-footer {
+    page-break-inside: avoid !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: #512da8 !important; /* purple */
+    color: white !important;
+  }
+
+  .exclude{
+    display:none
+  }
+
+  @page {
+    size: A4;
+    margin: 2cm;
+  }
+
+  body {
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

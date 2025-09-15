@@ -9,16 +9,20 @@ import sleep from '@/utils/sleep'
 import { useNavigate } from 'react-router-dom'
 import { TbTrash } from 'react-icons/tb'
 import type { OrderFormSchema } from '../OrderForm'
+import { useParams } from 'react-router-dom'
 
 const OrderCreate = () => {
     const navigate = useNavigate()
+
+    console.log(useParams())
 
     const [discardConfirmationOpen, setDiscardConfirmationOpen] =
         useState(false)
     const [isSubmiting, setIsSubmiting] = useState(false)
 
     const handleFormSubmit = async (values: OrderFormSchema) => {
-        console.log('Submitted values', values)
+        console.log('This is the form values being submitted:', values)
+        console.log('it is submitted')
         setIsSubmiting(true)
         await sleep(800)
         setIsSubmiting(false)
@@ -67,6 +71,9 @@ const OrderCreate = () => {
                                 variant="solid"
                                 type="submit"
                                 loading={isSubmiting}
+                                onClick={() => {
+                                    console.log('Button Clicked')
+                                }}
                             >
                                 Create
                             </Button>

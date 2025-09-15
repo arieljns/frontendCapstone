@@ -2,10 +2,7 @@ import { useState } from 'react'
 import Button from '@/components/ui/Button'
 import Dialog from '@/components/ui/Dialog'
 import NewProjectForm from './NewProjectForm'
-import { useProjectListStore } from '../store/projectListStore'
-import { apiGetProjectMembers } from '@/services/ProjectService'
-import useSWR from 'swr'
-import type { GetProjectMembersResponse } from '../types'
+
 import UploadFile from '@/views/concepts/files/FileManager/components/UploadFile'
 
 type ProjectListHeaderProps = {
@@ -15,26 +12,6 @@ type ProjectListHeaderProps = {
 export const ProjectListHeader = ({ options }: ProjectListHeaderProps) => {
     const [dialogOpen, setDialogOpen] = useState(false)
 
-    const { setMembers } = useProjectListStore()
-
-    useSWR(
-        ['/api/projects/members'],
-        () => apiGetProjectMembers<GetProjectMembersResponse>(),
-        {
-            revalidateOnFocus: false,
-            revalidateIfStale: false,
-            revalidateOnReconnect: false,
-            onSuccess: (data) => {
-                const members = data?.allMembers.map((item) => ({
-                    value: item.id,
-                    label: item.name,
-                    img: item.img,
-                }))
-                setMembers(members)
-            },
-        },
-    )
-
     return (
         <>
             {options ? (
@@ -43,8 +20,8 @@ export const ProjectListHeader = ({ options }: ProjectListHeaderProps) => {
                 </div>
             ) : (
                 <div className="flex items-center justify-between gap-4 mb-4">
-                    <h3>Before Meetings</h3>
-                    <div className='flex items-center justify-between gap-3'>
+                    <h3>Meeting Feature</h3>
+                    <div className="flex items-center justify-between gap-3">
                         <UploadFile />
                         <Button
                             variant="solid"

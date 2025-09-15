@@ -98,7 +98,7 @@ const Card = (props: CardProps) => {
             ref={ref}
             className={cardClass}
             role="presentation"
-            onClick={handleClick}
+            onClick={clickable ? handleClick : undefined}
             {...rest}
         >
             {headerProps.content && (

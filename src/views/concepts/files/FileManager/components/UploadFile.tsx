@@ -7,17 +7,86 @@ import Notification from '@/components/ui/Notification'
 import UploadMedia from '@/assets/svg/UploadMedia'
 import sleep from '@/utils/sleep'
 import { FaFileCsv } from 'react-icons/fa'
+import Papa from 'papaparse'
+import { useProjectListStore } from '@/views/concepts/projects/ProjectList/store/projectListStore'
+import { GetProjectListResponse } from '@/views/concepts/projects/ProjectList/types'
+import { apiPostCsvData } from '@/services/ProjectService'
 
 const UploadFile = () => {
+    const { setProjectList } = useProjectListStore()
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
     const [isUploading, setIsUploading] = useState(false)
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+    const [parsedData, setParsedData] = useState<any[]>([])
 
     const handleUploadDialogClose = () => {
         setUploadDialogOpen(false)
     }
 
+    const handleFileChange = (newFileList: File[], oldFileList: File[]) => {
+        console.log('Old files:', oldFileList)
+        console.log('New files:', newFileList)
+
+        setUploadedFiles(newFileList)
+
+        if (newFileList.length > 0) {
+            const fileToParse = newFileList[0]
+
+            Papa.parse(fileToParse, {
+                header: true,
+                delimiter: ';',
+                skipEmptyLines: true,
+                complete: (results) => {
+                    console.log('Raw parsed rows:', results.data)
+
+                    // transform each row into DTO shape
+                    const transformed = results.data.map((row: any) => ({
+                        name: row.name?.trim() || '',
+                        desc: row.desc?.trim() || '',
+                        totalTask: !isNaN(Number(row.totalTask))
+                            ? Number(row.totalTask)
+                            : 0,
+                        completedTask: !isNaN(Number(row.completedTask))
+                            ? Number(row.completedTask)
+                            : 0,
+                        companySize: row.companySize || '',
+                        picName: row.picName || '',
+                        picRole: row.picRole ? [row.picRole] : [],
+                        notes: row.notes || '',
+                        currentSystem: row.currentSystem
+                            ? [row.currentSystem]
+                            : [],
+                        systemRequirement: row.systemRequirement
+                            ? [row.systemRequirement]
+                            : [],
+                        budget: !isNaN(Number(row.budget))
+                            ? Number(row.budget)
+                            : 0,
+                        category: row.category ? [row.category] : [],
+                        meetingDate: row.meetingDate
+                            ? new Date(
+                                  row.meetingDate
+                                      .split('/')
+                                      .reverse()
+                                      .join('-'),
+                              )
+                            : null,
+                    }))
+
+                    console.log('Transformed rows:', transformed)
+                    setParsedData(transformed)
+                    setProjectList(transformed as GetProjectListResponse)
+                },
+                error: (error: Error) => {
+                    console.error('Error parsing CSV:', error)
+                },
+            })
+        }
+    }
+
     const handleUpload = async () => {
+        console.log('this is the parsed data', parsedData)
+        await apiPostCsvData(parsedData)
         setIsUploading(true)
         await sleep(500)
         handleUploadDialogClose()
@@ -49,7 +118,7 @@ const UploadFile = () => {
                 <Upload
                     draggable
                     className="mt-6 bg-gray-100"
-                    onChange={setUploadedFiles}
+                    onChange={handleFileChange}
                     onFileRemove={setUploadedFiles}
                 >
                     <div className="my-4 text-center">

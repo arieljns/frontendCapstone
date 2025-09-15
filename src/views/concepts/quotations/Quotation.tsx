@@ -1,27 +1,15 @@
-import { useRef } from 'react'
-import QuotationFooter from './components/QuotationFooter'
 import QuotationHeader from './components/QuotationHeader'
 import QuotationTerms from './components/QuotationTerms'
 import Button from '@/components/ui/Button'
-
-import { useReactToPrint } from 'react-to-print'
+import './components/quotationHeader.css'
 
 const Quotation = () => {
-    const printRef = useRef()
-
-    const handlePrint = useReactToPrint({
-        content: () => printRef.current,
-        documentTitle: 'MyDocument',
-    })
-
     return (
-        <div>
-            <Button onClick={() => window.print()}>Print</Button>
-            <div className="" ref={printRef}>
+        <div className="print-page">
+            <Button className="exclude" onClick={() => window.print()}>Print</Button>
+            <div className="">
                 <QuotationHeader />
-                <QuotationFooter />
                 <QuotationTerms />
-                <QuotationFooter />
             </div>
         </div>
     )

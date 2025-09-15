@@ -1,43 +1,55 @@
-
+import './quotationHeader.css'
+import QuotationFooter from './QuotationFooter'
+import { useParams } from 'react-router-dom'
+import { useProjectListStore } from '../../projects/ProjectList/store/projectListStore'
 
 export default function QuotationHeader() {
-    return (
-        <div>
+    const { id } = useParams<{ id: string }>()
+    console.log(typeof id)
 
-            <div
-                id="quotation-print"
-                className="max-w-4xl mx-auto p-10 text-black text-sm font-sans"
-            >
-                <div className="flex justify-between items-center">
+    const { projectList } = useProjectListStore()
+
+    console.log('This is the project list:', projectList)
+
+    const quotationData = id
+        ? projectList.find((project) => String(project.id) === id)
+        : []
+
+    console.log(quotationData)
+    return (
+        <div
+            id="quotation-print"
+            className="flex flex-col justify-between w-[210mm] min-h-[297mm] mx-auto pt-[10mm] pl-[10mm] pr-[10mm] mb-14 text-black text-sm font-sans bg-white print-page"
+        >
+            {/* Top Content Block */}
+            <div>
+                {/* Header */}
+                <div className="flex justify-between items-center mb-6">
                     <img
-                        src="../../../../../../public/img/logo mekari.png"
+                        src="/img/logo mekari.png"
                         alt="Mekari Logo"
                         className="w-auto h-12"
                     />
-                    <h3>QUOTATION</h3>
+                    <h3 className="text-lg font-bold">QUOTATION</h3>
                 </div>
-                <table className="w-full border border-gray-400 text-xs mb-6">
-                    <thead className="flex gap-6 items-start justify-between">
-                        <tr className="bg-gray-100">
-                            <th className="flex flex-col items-start ">
-                                <p className="mb-2">Sales Name/ Email</p>
-                                Gabriella Faustina
-                            </th>
-                        </tr>
-                        <tr className="bg-gray-100">
-                            <th className="flex flex-col items-start">
-                                <p className="mb-2">Quotation No.</p>
-                                <td>2401/SQ/MSN/01/2024</td>
-                            </th>
-                        </tr>
-                        <tr className="bg-gray-100">
-                            <th className="flex flex-col items-start">
-                                <p className="mb-2">Expiry Date</p>
-                                23 Desember 2025
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
+
+                {/* Quotation Details */}
+                <div className="grid grid-cols-3 gap-4 text-xs mb-6">
+                    <div>
+                        <p className="font-semibold">Sales Name / Email</p>
+                        <p>Gabriella Faustina</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold">Quotation No.</p>
+                        <p>2401/SQ/MSN/{id}/2024</p>
+                    </div>
+                    <div>
+                        <p className="font-semibold">Expiry Date</p>
+                        <p>23 Desember 2025</p>
+                    </div>
+                </div>
+
+                {/* Quotation Table */}
                 <table className="w-full border border-gray-400 text-sm mb-6">
                     <thead>
                         <tr className="bg-gray-100">
@@ -70,9 +82,9 @@ export default function QuotationHeader() {
                                 Rp 30.000.000
                             </td>
                         </tr>
-                        <tr className="bg-yellow-50 font-semibold">
+                        <tr className=" font-semibold">
                             <td
-                                colSpan="3"
+                                colSpan={3}
                                 className="border border-gray-400 p-2"
                             >
                                 Diskon
@@ -81,80 +93,71 @@ export default function QuotationHeader() {
                         </tr>
                         <tr>
                             <td
-                                colSpan="3"
+                                colSpan={3}
                                 className="border border-gray-400 p-2"
                             >
                                 Total setelah diskon
                             </td>
-                            <td className="border border-gray-400 p-2">
+                            <td className="border border-gray-400 bg-[#512da8] text-white p-2">
                                 Rp 21.600.000
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <div className="grid grid-cols-2 border divide-x divide-y divide-x border-black">
-                    {/* Row 1 */}
-                    <div className="p-3  text-gray-900">COMPANY NAME</div>
-                    <div className="p-3  text-gray-900">TAX NUMBER</div>
-
-                    <div className="p-3 col-span-1 font-bold">
-                        PT. Batam Slop and Sludge Treatment Centre
-                    </div>
+                {/* Company Info Grid */}
+                <div className="grid grid-cols-2 border divide-x divide-y border-black mb-6">
+                    <div className="p-3 text-gray-900">COMPANY NAME</div>
+                    <div className="p-3 text-gray-900">TAX NUMBER</div>
+                    <div className="p-3 font-bold">{quotationData.name}</div>
                     <div className="p-3"></div>
 
-                    {/* Row 2 */}
                     <div className="p-3 text-gray-900">MAILING ADDRESS</div>
                     <div className="p-3 text-gray-900">TAX ADDRESS</div>
-
                     <div className="p-3 h-20"></div>
                     <div className="p-3 h-20"></div>
 
-                    {/* Row 3 */}
                     <div className="p-3 text-gray-900 italic">
                         MAILING PIC / EMAIL / CONTACT
                     </div>
                     <div className="p-3 text-gray-900">
                         FINANCE PIC / EMAIL / CONTACT
                     </div>
-
-                    <div className="p-3">
+                    <div className="p-3 font-bold">
                         Grace Agnesia / agnesia@bsstec.com / 085207734731
                     </div>
                     <div className="p-3"></div>
 
-                    {/* Row 4 */}
                     <div className="p-3 text-gray-900">PIC NAME</div>
                     <div className="p-3 text-gray-900">PIC POSITION</div>
+                    <div className="p-3 font-bold">
+                        {' '}
+                        {quotationData.picName}
+                    </div>
+                    <div className="p-3 font-bold">
+                        {quotationData.picRole[0]}
+                    </div>
 
-                    <div className="p-3">Grace Agnesia</div>
-                    <div className="p-3"></div>
-
-                    {/* Row 5 */}
                     <div className="p-3 text-gray-900">
                         DIRECTOR / SIGNEE NAME
                     </div>
                     <div className="p-3 text-gray-900">
                         DIRECTOR / SIGNEE POSITION
                     </div>
-
                     <div className="p-3"></div>
                     <div className="p-3"></div>
 
-                    {/* Row 6 */}
                     <div className="p-3 text-gray-900">
                         DIRECTOR / SIGNEE EMAIL
                     </div>
                     <div className="p-3 text-gray-900">SUPER ADMIN EMAIL</div>
-
                     <div className="p-3"></div>
                     <div className="p-3"></div>
                 </div>
-                {/* Consent Section */}
-                <div className="p-6 col-span-2">
-                    <div className="italic text-gray-500">
-                        UNDER THE CONSENT OF,
-                    </div>
+
+                {/* Consent */}
+                <div className="pt-4 text-gray-600 italic">
+                    UNDER THE CONSENT OF,
                     <div className="flex justify-between pt-10">
                         <div className="border-t border-gray-400 w-64 text-center pt-2">
                             SIGNEE NAME
@@ -164,6 +167,11 @@ export default function QuotationHeader() {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Footer Component Stays at the Bottom */}
+            <div className="mt-auto pt-8">
+                <QuotationFooter />
             </div>
         </div>
     )

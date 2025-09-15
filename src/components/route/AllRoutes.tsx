@@ -5,7 +5,7 @@ import AppRoute from './AppRoute'
 import PageContainer from '@/components/template/PageContainer'
 import { protectedRoutes, publicRoutes } from '@/configs/routes.config'
 import appConfig from '@/configs/app.config'
-import { useAuth } from '@/auth'
+import useAuth from '@/auth/useAuth'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import type { LayoutType } from '@/@types/theme'
 

@@ -7,7 +7,9 @@ export type ProjectListState = {
 }
 
 type ProjectListAction = {
-    setProjectList: (payload: ProjectList) => void
+    setProjectList: (
+        payload: ProjectList | ((prev: ProjectList) => ProjectList),
+    ) => void
     updateProjectList: (payload: Project) => void
     updateProjectFavorite: (payload: { id: string; value: boolean }) => void
 }
@@ -21,9 +23,14 @@ export const useProjectListStore = create<ProjectListState & ProjectListAction>(
     (set) => ({
         ...initialState,
         setProjectList: (payload) => {
-            console.log('setting the project list', payload)
-            set(() => ({ projectList: payload }))
+            set((state) => ({
+                projectList:
+                    typeof payload === 'function'
+                        ? payload(state.projectList)
+                        : payload,
+            }))
         },
+
         updateProjectList: (payload) =>
             set((state) => ({
                 projectList: [...state.projectList, ...[payload]],

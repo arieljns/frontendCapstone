@@ -1,7 +1,7 @@
 export type Project = {
-    id:string
+    id: string
     name: string
-    category?: string
+    category: string[]
     desc: string
     attachmentCount?: number
     totalTask: number
@@ -16,6 +16,8 @@ export type Project = {
     currentSystem: string[]
     systemRequirement: string[]
     budget: number
+    meetingDate: Date
+    isMeetingStage: boolean
 }
 
 export type ProjectList = Project[]

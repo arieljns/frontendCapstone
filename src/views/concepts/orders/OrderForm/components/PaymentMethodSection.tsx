@@ -5,7 +5,7 @@ import { FormItem } from '@/components/ui/Form'
 import FormCustomFormatInput from '@/components/shared/CustomFormatInput'
 import FormPatternInput from '@/components/shared/PatternInput'
 import { Controller } from 'react-hook-form'
-import { TbCreditCard, TbBrandPaypal, TbBuildingBank } from 'react-icons/tb'
+import { TbCreditCard, TbBuildingBank } from 'react-icons/tb'
 import { components } from 'react-select'
 import type {
     FormSectionBaseProps,
@@ -19,7 +19,6 @@ import type { ReactNode } from 'react'
 type CreditCardFieldError = FieldErrors<
     GetPaymentMethodFields<'creditOrDebitCard'>
 >
-type PaypalFieldError = FieldErrors<GetPaymentMethodFields<'paypal'>>
 type BankTransferFieldError = FieldErrors<
     GetPaymentMethodFields<'bankTransfer'>
 >
@@ -40,7 +39,6 @@ const paymentMethodOptions: PaymentMethodOption[] = [
         value: 'creditOrDebitCard',
         icon: <TbCreditCard />,
     },
-    { label: 'Paypal', value: 'paypal', icon: <TbBrandPaypal /> },
     { label: 'Bank transfer', value: 'bankTransfer', icon: <TbBuildingBank /> },
 ]
 
@@ -107,7 +105,7 @@ const PaymentMethodSection = ({
 }: PaymentMethodSectionProps) => {
     return (
         <Card id="payment">
-            <h4 className="mb-6">Payment</h4>
+            <h4 className="mb-6">Payment Details</h4>
             <FormItem
                 label="Payment method"
                 invalid={Boolean(errors.paymentMethod)}
@@ -133,7 +131,7 @@ const PaymentMethodSection = ({
                     )}
                 />
             </FormItem>
-            <FormItem
+            {/* <FormItem
                 label="Term In"
                 invalid={Boolean(errors.paymentMethod)}
                 errorMessage={errors.paymentMethod?.message}
@@ -157,7 +155,7 @@ const PaymentMethodSection = ({
                         />
                     )}
                 />
-            </FormItem>
+            </FormItem> */}
             {selectedPaymentMethod === 'creditOrDebitCard' && (
                 <>
                     <FormItem
@@ -236,32 +234,7 @@ const PaymentMethodSection = ({
                     </div>
                 </>
             )}
-            {selectedPaymentMethod === 'paypal' && (
-                <>
-                    <FormItem
-                        label="Paypal email"
-                        invalid={Boolean(
-                            (errors as PaypalFieldError).paypalEmail,
-                        )}
-                        errorMessage={
-                            (errors as PaypalFieldError).paypalEmail?.message
-                        }
-                    >
-                        <Controller
-                            name="paypalEmail"
-                            control={control}
-                            render={({ field }) => (
-                                <Input
-                                    type="email"
-                                    autoComplete="off"
-                                    placeholder="Email"
-                                    {...field}
-                                />
-                            )}
-                        />
-                    </FormItem>
-                </>
-            )}
+
             {selectedPaymentMethod === 'bankTransfer' && (
                 <>
                     <FormItem
@@ -333,54 +306,6 @@ const PaymentMethodSection = ({
                             )}
                         />
                     </FormItem>
-                    <div className="grid grid-cols-2 gap-4">
-                        <FormItem
-                            label="IBAN"
-                            invalid={Boolean(
-                                (errors as BankTransferFieldError).IBAN,
-                            )}
-                            errorMessage={
-                                (errors as BankTransferFieldError).IBAN?.message
-                            }
-                        >
-                            <Controller
-                                name="IBAN"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        type="text"
-                                        autoComplete="off"
-                                        placeholder="IBAN"
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        </FormItem>
-                        <FormItem
-                            label="Reference number"
-                            invalid={Boolean(
-                                (errors as BankTransferFieldError)
-                                    .referenceNumber,
-                            )}
-                            errorMessage={
-                                (errors as BankTransferFieldError)
-                                    .referenceNumber?.message
-                            }
-                        >
-                            <Controller
-                                name="referenceNumber"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        type="text"
-                                        autoComplete="off"
-                                        placeholder="Reference number"
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        </FormItem>
-                    </div>
                 </>
             )}
         </Card>

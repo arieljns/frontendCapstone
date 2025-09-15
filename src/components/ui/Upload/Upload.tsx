@@ -208,8 +208,8 @@ const Upload = (props: UploadProps) => {
                     disabled={disabled}
                     multiple={multiple}
                     accept={accept}
-                    title=""
                     value=""
+                    title=""
                     onChange={onNewFileUpload}
                     {...rest}
                 ></input>

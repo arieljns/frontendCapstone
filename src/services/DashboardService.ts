@@ -14,6 +14,23 @@ export async function apiGetProjectDashboard<T>() {
     })
 }
 
+export async function apiGetCustomerById<T, U extends { id: string }>(
+    params: U,
+) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: `/before/${params.id}`,
+        method: 'get',
+        params,
+    })
+}
+
+export async function apiGetProjectDashboardById<T>(id: string) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: `/before/${id}`,
+        method: 'GET',
+    })
+}
+
 export async function apiGetAnalyticDashboard<T>() {
     return ApiService.fetchDataWithAxios<T>({
         url: '/api/dashboard/analytic',

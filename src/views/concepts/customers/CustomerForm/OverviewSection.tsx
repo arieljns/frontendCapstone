@@ -1,161 +1,114 @@
-import { useMemo } from 'react'
 import Card from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
-import Select, { Option as DefaultOption } from '@/components/ui/Select'
-import Avatar from '@/components/ui/Avatar'
 import { FormItem } from '@/components/ui/Form'
-import { countryList } from '@/constants/countries.constant'
 import { Controller } from 'react-hook-form'
-import { components } from 'react-select'
 import type { FormSectionBaseProps } from './types'
-import type { ControlProps, OptionProps } from 'react-select'
 import DatePicker from '@/components/ui/DatePicker/DatePicker'
 type OverviewSectionProps = FormSectionBaseProps
 
-type CountryOption = {
-    label: string
-    dialCode: string
-    value: string
-}
-
-const { Control } = components
-
-const CustomSelectOption = (props: OptionProps<CountryOption>) => {
-    return (
-        <DefaultOption<CountryOption>
-            {...props}
-            customLabel={(data) => (
-                <span className="flex items-center gap-2">
-                    <Avatar
-                        shape="circle"
-                        size={20}
-                        src={`/img/countries/${data.value}.png`}
-                    />
-                    <span>{data.dialCode}</span>
-                </span>
-            )}
-        />
-    )
-}
-
-const CustomControl = ({ children, ...props }: ControlProps<CountryOption>) => {
-    const selected = props.getValue()[0]
-    return (
-        <Control {...props}>
-            {selected && (
-                <Avatar
-                    className="ltr:ml-4 rtl:mr-4"
-                    shape="circle"
-                    size={20}
-                    src={`/img/countries/${selected.value}.png`}
-                />
-            )}
-            {children}
-        </Control>
-    )
-}
-
 const OverviewSection = ({ control, errors }: OverviewSectionProps) => {
-    const dialCodeList = useMemo(() => {
-        const newCountryList: Array<CountryOption> = JSON.parse(
-            JSON.stringify(countryList),
-        )
-
-        return newCountryList.map((country) => {
-            country.label = country.dialCode
-            return country
-        })
-    }, [])
-
     return (
         <Card>
             <h4 className="mb-6">Company Overview</h4>
             <div className="grid md:grid-cols-2 gap-4">
                 <FormItem
                     label="Company Name"
-                    invalid={Boolean(errors.firstName)}
-                    errorMessage={errors.firstName?.message}
+                    invalid={Boolean(errors.name)}
+                    errorMessage={errors.name?.message}
                 >
                     <Controller
-                        name="firstName"
+                        name="name"
                         control={control}
                         render={({ field }) => (
                             <Input
                                 type="text"
                                 autoComplete="off"
-                                placeholder="First Name"
+                                placeholder="Company Name"
                                 {...field}
+                                value={field.value || ''}
                             />
                         )}
                     />
                 </FormItem>
                 <FormItem
                     label="PIC Name"
-                    invalid={Boolean(errors.lastName)}
-                    errorMessage={errors.lastName?.message}
+                    invalid={Boolean(errors.picName)}
+                    errorMessage={errors.picName?.message}
                 >
                     <Controller
-                        name="lastName"
+                        name="picName"
                         control={control}
                         render={({ field }) => (
                             <Input
                                 type="text"
                                 autoComplete="off"
-                                placeholder="Last Name"
+                                placeholder="pic name"
                                 {...field}
+                                value={field.value || ''}
                             />
                         )}
                     />
                 </FormItem>
             </div>
             <FormItem
-                label="Email"
-                invalid={Boolean(errors.email)}
-                errorMessage={errors.email?.message}
+                label="Company Size"
+                invalid={Boolean(errors.companySize)}
+                errorMessage={errors.companySize?.message}
             >
                 <Controller
-                    name="email"
+                    name="companySize"
                     control={control}
                     render={({ field }) => (
                         <Input
-                            type="email"
+                            type="text"
                             autoComplete="off"
-                            placeholder="Email"
+                            placeholder="desc"
                             {...field}
+                            value={field.value || ''}
+                        />
+                    )}
+                />
+            </FormItem>
+            <FormItem
+                label="desc"
+                invalid={Boolean(errors.desc)}
+                errorMessage={errors.desc?.message}
+            >
+                <Controller
+                    name="desc"
+                    control={control}
+                    render={({ field }) => (
+                        <Input
+                            type="text"
+                            autoComplete="off"
+                            placeholder="desc"
+                            {...field}
+                            value={field.value || ''}
                         />
                     )}
                 />
             </FormItem>
 
             <FormItem
-                invalid={
-                    Boolean(errors.phoneNumber) || Boolean(errors.dialCode)
-                }
+                label="Notes"
+                invalid={Boolean(errors.notes)}
+                errorMessage={errors.notes?.message}
             >
-                <label className="form-label mb-2">PIC Role</label>
                 <Controller
-                    name="dialCode"
+                    name="notes"
                     control={control}
                     render={({ field }) => (
-                        <Select<CountryOption>
-                            options={dialCodeList}
+                        <Input
+                            type="text"
+                            autoComplete="off"
+                            placeholder="pic name"
                             {...field}
-                            className="w-full"
-                            components={{
-                                Option: CustomSelectOption,
-                                Control: CustomControl,
-                            }}
-                            placeholder=""
-                            value={dialCodeList.filter(
-                                (option) => option.dialCode === field.value,
-                            )}
-                            onChange={(option) =>
-                                field.onChange(option?.dialCode)
-                            }
+                            value={field.value || ''}
                         />
                     )}
                 />
             </FormItem>
+
             <label className="form-label mb-2">Meeting Date</label>
             <DatePicker />
         </Card>

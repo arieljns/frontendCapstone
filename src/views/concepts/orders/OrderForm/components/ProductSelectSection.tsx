@@ -8,88 +8,105 @@ import Table from '@/components/ui/Table'
 import ScrollBar from '@/components/ui/ScrollBar'
 import AutoComplete from '@/components/shared/AutoComplete'
 import useResponsive from '@/utils/hooks/useResponsive'
-import { useOrderFormStore } from '../store/orderFormStore'
 import classNames from '@/utils/classNames'
 import { NumericFormat } from 'react-number-format'
-import { TbSearch, TbMinus, TbPlus } from 'react-icons/tb'
-import type { Product, ProductOption, SelectedProduct } from '../types'
+import { TbSearch } from 'react-icons/tb'
+import type {
+    Product,
+    ProductOption,
+    OrderFormSchema,
+    ProductTermIn,
+} from '../types'
+import { listOfProducts } from '@/constants/products.constant'
+import {
+    Control,
+    useController,
+    FieldErrors,
+    Controller,
+    UseFormWatch,
+} from 'react-hook-form'
+import { FormItem, Select } from '@/components/ui'
+import { TbTrash } from 'react-icons/tb'
+import { promoList } from '@/constants/promo.constant'
 
 const { Tr, Th, Td, THead, TBody } = Table
 
-const ProductSelectSection = () => {
-    const { productOption, productList, selectedProduct, setSelectedProduct } =
-        useOrderFormStore()
+type Props = {
+    control: Control<OrderFormSchema>
+    productList: Product[]
+    productOption: ProductOption[]
+    errors: FieldErrors<OrderFormSchema>
+    watch: UseFormWatch<OrderFormSchema>
+}
+
+type promoOption = {
+    label: string
+    value: string
+}
+
+const ProductSelectSection = ({
+    control,
+    productList,
+    productOption,
+    errors,
+    watch,
+}: Props) => {
+    const { field } = useController({
+        name: 'products',
+        control,
+    })
 
     const [inputValue, setInputValue] = useState('')
-
+    const [termIn, setTermIn] = useState<ProductTermIn>({
+        termIn: 0,
+        discountRate: 0,
+        totalEmployee: 0,
+    })
     const [productsDialogOpen, setProductsDialogOpen] = useState(false)
-
     const { smaller } = useResponsive()
 
+    const selectedProducts: Product[] = field.value ?? []
+
+    // Handle product selection from AutoComplete
     const handleOptionSelect = (option: ProductOption) => {
         const selected = productList.find(
             (product) => product.id === option.value,
         )
 
         if (selected) {
-            if (selectedProduct.some((product) => product.id === selected.id)) {
-                return
-            } else {
-                selectedProduct.push({ ...selected, quantity: 1 })
-                setSelectedProduct(selectedProduct)
+            const exists = selectedProducts.some((p) => p.id === selected.id)
+            if (!exists) {
+                field.onChange([...selectedProducts, selected])
             }
         }
     }
 
-    const handleProductIncremental = (productToIncrease: SelectedProduct) => {
-        setSelectedProduct(
-            selectedProduct.map((product) => {
-                if (product.id === productToIncrease.id) {
-                    product.quantity = product.quantity + 1
-                }
-                return product
-            }),
-        )
-    }
-
-    const handleProductDecremental = (productToDecrease: SelectedProduct) => {
-        const targeted = productToDecrease
-
-        targeted.quantity = targeted.quantity - 1
-        if (targeted.quantity === 0) {
-            setSelectedProduct(
-                selectedProduct.filter((product) => product.id !== targeted.id),
-            )
-        } else {
-            setSelectedProduct(
-                selectedProduct.map((product) => {
-                    if (product.id === targeted.id) {
-                        product = targeted
-                    }
-                    return product
-                }),
-            )
-        }
-    }
-
-    const handleProductChecked = (checked: boolean, selected: Product) => {
+    const handleProductChecked = (checked: boolean, product: Product) => {
         if (checked) {
-            selectedProduct.push({ ...selected, quantity: 1 })
-            setSelectedProduct(selectedProduct)
+            if (!selectedProducts.some((p) => p.id === product.id)) {
+                field.onChange([...selectedProducts, product])
+            }
         } else {
-            setSelectedProduct(
-                selectedProduct.filter((product) => product.id !== selected.id),
-            )
+            field.onChange(selectedProducts.filter((p) => p.id !== product.id))
         }
     }
+
+    const totalEmployeeState = watch('totalEmployee')
+    const discountRateState = watch('discountRate')
+    const termInState = watch('termIn')
 
     const total = useMemo(() => {
-        return selectedProduct.reduce((accumulator, product) => {
-            return accumulator + product.price * product.quantity
-        }, 0)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedProduct, selectedProduct.length])
-
+        const beforeDiscount = selectedProducts.reduce(
+            (acc, product) => acc + product.price * totalEmployeeState * 12,
+            0,
+        )
+        const discountYield = discountRateState / 100
+        console.log('this is discount yield', discountYield)
+        const afterDiscount = beforeDiscount * discountYield
+        const taxRatio = beforeDiscount - afterDiscount * 0.11
+        return taxRatio + afterDiscount
+    }, [selectedProducts, totalEmployeeState, discountRateState])
+    //hid
     return (
         <>
             <Card id="selectProducts">
@@ -127,8 +144,8 @@ const ProductSelectSection = () => {
                         </Tr>
                     </THead>
                     <TBody>
-                        {selectedProduct.length > 0 ? (
-                            selectedProduct.map((product) => (
+                        {selectedProducts.length > 0 ? (
+                            selectedProducts.map((product) => (
                                 <Tr key={product.id}>
                                     <Td>
                                         <div className="flex items-center gap-2">
@@ -150,43 +167,23 @@ const ProductSelectSection = () => {
                                         <div className="heading-text font-bold">
                                             <NumericFormat
                                                 fixedDecimalScale
-                                                prefix="$"
+                                                prefix="Rp "
                                                 displayType="text"
-                                                value={
-                                                    product.price *
-                                                    product.quantity
-                                                }
+                                                value={product.price}
                                                 decimalScale={2}
                                                 thousandSeparator={true}
                                             />
                                         </div>
                                     </Td>
                                     <Td>
-                                        <div className="flex items-center">
-                                            <Button
-                                                type="button"
-                                                icon={<TbMinus />}
-                                                size="xs"
-                                                onClick={() =>
-                                                    handleProductDecremental(
-                                                        product,
-                                                    )
-                                                }
-                                            />
-                                            <div className="w-10 text-center">
-                                                <span>{product.quantity}</span>
+                                        <div className="heading-text ">
+                                            <div className="heading-text ">
+                                                /Employee
                                             </div>
-                                            <Button
-                                                type="button"
-                                                icon={<TbPlus />}
-                                                size="xs"
-                                                onClick={() =>
-                                                    handleProductIncremental(
-                                                        product,
-                                                    )
-                                                }
-                                            />
                                         </div>
+                                    </Td>
+                                    <Td>
+                                        <TbTrash />
                                     </Td>
                                 </Tr>
                             ))
@@ -199,15 +196,129 @@ const ProductSelectSection = () => {
                         )}
                     </TBody>
                 </Table>
-                <div className="mt-8 flex justify-end">
+
+                <div className="mt-4 flex justify-between">
+                    <span className="text-base flex  gap-2">
+                        <span className="font-semibold">Total Employee: </span>
+                        <span className="text-lg  heading-text flex  gap-4">
+                            <FormItem
+                                invalid={Boolean(errors.totalEmployee)}
+                                errorMessage={errors.totalEmployee?.message}
+                            >
+                                <Controller
+                                    name="totalEmployee"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <input
+                                            type="number"
+                                            className="border rounded-lg px-2 w-14 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+                        </span>
+                        Employee
+                    </span>
+                    <hr />
+                    <span className="text-base flex  gap-2">
+                        <span className="font-semibold">Discount Rate: </span>
+                        <span className="text-lg  heading-text flex  gap-4">
+                            <FormItem
+                                invalid={Boolean(errors.discountRate)}
+                                errorMessage={errors.discountRate?.message}
+                            >
+                                <Controller
+                                    name="discountRate"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <input
+                                            type="number"
+                                            className="border rounded-lg px-2 w-14 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+                        </span>
+                        %
+                    </span>
+                    <span className="text-base flex  gap-2">
+                        <span className="font-semibold">Term In: </span>
+                        <span className="text-lg  heading-text flex  gap-4">
+                            <FormItem
+                                invalid={Boolean(errors.termIn)}
+                                errorMessage={errors.termIn?.message}
+                            >
+                                <Controller
+                                    name="termIn"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <input
+                                            type="number"
+                                            className="border rounded-lg px-2 w-14 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+                        </span>
+                        Months
+                    </span>
+                </div>
+                <div>
+                    <div>
+                        <FormItem
+                            label="Promo"
+                            invalid={Boolean(errors.promo)}
+                            errorMessage={errors.promo?.message}
+                        >
+                            <Controller
+                                name="promo"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select<promoOption>
+                                        options={promoList}
+                                        {...field}
+                                        placeholder="promo"
+                                        value={promoList.filter(
+                                            (option) =>
+                                                option.value === field.value,
+                                        )}
+                                        onChange={(option) =>
+                                            field.onChange(option?.value)
+                                        }
+                                    />
+                                )}
+                            />
+                        </FormItem>
+                    </div>
+                </div>
+
+                <div className="mt-2 flex justify-end">
                     <span className="text-base flex items-center gap-2">
                         <span className="font-semibold">Total: </span>
                         <span className="text-lg font-bold heading-text">
                             <NumericFormat
                                 fixedDecimalScale
-                                prefix="$"
+                                prefix="Rp "
                                 displayType="text"
                                 value={total}
+                                decimalScale={2}
+                                thousandSeparator={true}
+                            />
+                        </span>
+                    </span>
+                </div>
+                <div className="mt-8 flex justify-end">
+                    <span className="text-base flex items-center gap-2">
+                        <span className="font-semibold">Total MRR: </span>
+                        <span className="text-lg font-bold heading-text">
+                            <NumericFormat
+                                fixedDecimalScale
+                                prefix="Rp "
+                                displayType="text"
+                                value={total / termInState}
                                 decimalScale={2}
                                 thousandSeparator={true}
                             />
@@ -229,7 +340,7 @@ const ProductSelectSection = () => {
                         <ScrollBar
                             className={classNames('overflow-y-auto h-80')}
                         >
-                            {productList.map((product) => (
+                            {listOfProducts.map((product) => (
                                 <div
                                     key={product.id}
                                     className="py-3 pr-5 rounded-lg flex items-center justify-between"
@@ -237,7 +348,7 @@ const ProductSelectSection = () => {
                                     <div className="flex items-center gap-2">
                                         <div className="px-1">
                                             <Checkbox
-                                                checked={selectedProduct.some(
+                                                checked={selectedProducts.some(
                                                     (selected) =>
                                                         selected.id ===
                                                         product.id,
@@ -263,12 +374,6 @@ const ProductSelectSection = () => {
                                                 <p>ID: {product.productCode}</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        Qty:{' '}
-                                        <span className="heading-text font-bold">
-                                            {product.stock}
-                                        </span>
                                     </div>
                                 </div>
                             ))}

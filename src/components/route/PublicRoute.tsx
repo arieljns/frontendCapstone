@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import appConfig from '@/configs/app.config'
-import { useAuth } from '@/auth'
+import useAuth from '@/auth/useAuth'
 
 const { authenticatedEntryPath } = appConfig
 

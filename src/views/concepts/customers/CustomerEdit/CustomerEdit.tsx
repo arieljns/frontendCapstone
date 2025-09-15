@@ -4,30 +4,16 @@ import Button from '@/components/ui/Button'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
-import { apiGetCustomer } from '@/services/CustomersService'
 import CustomerForm from '../CustomerForm'
 import sleep from '@/utils/sleep'
-import NoUserFound from '@/assets/svg/NoUserFound'
 import { TbTrash, TbArrowNarrowLeft } from 'react-icons/tb'
-import { useParams, useNavigate } from 'react-router-dom'
-import useSWR from 'swr'
+import { useNavigate } from 'react-router-dom'
 import type { CustomerFormSchema } from '../CustomerForm'
-import type { Customer } from '../CustomerList/types'
+import type { Project } from '../../projects/ProjectList/types'
+import isEmpty from 'lodash/isEmpty'
 
-const CustomerEdit = () => {
-    const { id } = useParams()
-
+const CustomerEdit = (customerData: Project) => {
     const navigate = useNavigate()
-
-    const { data, isLoading } = useSWR(
-        [`/api/customers${id}`, { id: id as string }],
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, params]) => apiGetCustomer<Customer, { id: string }>(params),
-        {
-            revalidateOnFocus: false,
-            revalidateIfStale: false,
-        },
-    )
 
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false)
     const [isSubmiting, setIsSubmiting] = useState(false)
@@ -40,29 +26,7 @@ const CustomerEdit = () => {
         toast.push(<Notification type="success">Changes Saved!</Notification>, {
             placement: 'top-center',
         })
-        navigate('/concepts/customers/customer-list')
-    }
-
-    const getDefaultValues = () => {
-        if (data) {
-            const { firstName, lastName, email, personalInfo, img } = data
-
-            return {
-                firstName,
-                lastName,
-                email,
-                img,
-                phoneNumber: personalInfo.phoneNumber,
-                dialCode: personalInfo.dialCode,
-                country: personalInfo.country,
-                address: personalInfo.address,
-                city: personalInfo.city,
-                postcode: personalInfo.postcode,
-                tags: [],
-            }
-        }
-
-        return {}
+        navigate('/dashboards/meeting-features')
     }
 
     const handleConfirmDelete = () => {
@@ -88,16 +52,10 @@ const CustomerEdit = () => {
 
     return (
         <>
-            {!isLoading && !data && (
-                <div className="h-full flex flex-col items-center justify-center">
-                    <NoUserFound height={280} width={280} />
-                    <h3 className="mt-8">No user found!</h3>
-                </div>
-            )}
-            {!isLoading && data && (
+            {!isEmpty(customerData) && (
                 <>
                     <CustomerForm
-                        defaultValues={getDefaultValues() as CustomerFormSchema}
+                        defaultValues={customerData}
                         newCustomer={false}
                         onFormSubmit={handleFormSubmit}
                     >

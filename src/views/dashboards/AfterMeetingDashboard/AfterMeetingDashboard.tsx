@@ -3,7 +3,7 @@ import ProjectOverview from './components/ProjectOverview'
 import { apiGetProjectDashboard } from '@/services/DashboardService'
 import useSWR from 'swr'
 import type { GetProjectDashboardResponse } from './types'
-import ProjectListContent from '@/views/concepts/projects/ProjectList/components/ProjectListContent'
+import MeetingDebriefList from './components/MeetingDebriefList'
 import ProjectListHeader from '@/views/concepts/projects/ProjectList/components/ProjectListHeader'
 
 const AfterMeetingDashboard = () => {
@@ -23,9 +23,9 @@ const AfterMeetingDashboard = () => {
                 <div className="flex flex-col gap-4">
                     <div className="flex gap-4">
                         <div>
-                            <ProjectListHeader options={true}/>
-                            <ProjectOverview /> 
-                            <ProjectListContent type='after'/>
+                            <ProjectListHeader options={true} />
+                            <ProjectOverview />
+                            <MeetingDebriefList />
                         </div>
                     </div>
                 </div>

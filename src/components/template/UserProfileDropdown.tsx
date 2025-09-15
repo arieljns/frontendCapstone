@@ -9,7 +9,7 @@ import {
     PiPulseDuotone,
     PiSignOutDuotone,
 } from 'react-icons/pi'
-import { useAuth } from '@/auth'
+import  useAuth  from '@/auth/useAuth'
 import type { JSX } from 'react'
 
 type DropdownList = {

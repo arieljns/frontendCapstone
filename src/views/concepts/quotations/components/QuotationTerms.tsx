@@ -1,6 +1,11 @@
+import QuotationFooter from './QuotationFooter'
+
 export default function QuotationTerms() {
     return (
-        <div>
+        <div
+            id="quotation-print"
+            className="w-[210mm] min-h-[297mm] mx-auto pt-[10mm] pl-[10mm] pr-[10mm] text-black text-sm font-sans bg-white"
+        >
             <hr className="border-black"></hr>
             <h3 className="text-lg font-semibold mb-2">Syarat dan Ketentuan</h3>
             <ol className="list-decimal list-inside space-y-1 mb-6">
@@ -70,7 +75,7 @@ export default function QuotationTerms() {
                 quotation/invoice/kontrak karena bisa menjadi objek pajak. Info
                 promo akan dikirim lewat email.
             </div>
-           
+            <QuotationFooter />
         </div>
     )
 }

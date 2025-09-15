@@ -18,6 +18,16 @@ const picRoleOptions = [
     { label: 'Designer', value: 'designer' },
 ]
 
+const categoryOptions = [
+    { label: 'manufacturing', value: 'manufacturing' },
+    { label: 'retail', value: 'retail' },
+    { label: 'service', value: 'service' },
+    { label: 'agriculture', value: 'agriculture' },
+    { label: 'construction', value: 'construction' },
+    { label: 'healthcare', value: 'healthcare' },
+    { label: 'entertainment', value: 'entertainment' },
+]
+
 const currentSystemOptions = [
     { label: 'Manual', value: 'manual' },
     { label: 'Spreadsheet', value: 'spreadsheet' },
@@ -43,11 +53,8 @@ type FormSchema = {
     currentSystem: string[]
     systemRequirement: string[]
     budget: number
-    assignees: {
-        img: string
-        value: string
-        label: string
-    }[]
+    meetingDate: Date
+    category: string[]
 }
 
 type TaskCount = {
@@ -72,6 +79,10 @@ const validationSchema: ZodType<FormSchema> = z.object({
     budget: z.coerce
         .number()
         .min(1, { message: 'Please provide a valid budget' }),
+    meetingDate: z.coerce.date().min(new Date(), {
+        message: 'Meeting date must be in the future',
+    }),
+    category: z.array(z.string()).min(1, { message: 'Category is required' }),
 })
 
 const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
@@ -94,6 +105,8 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
             currentSystem: [],
             systemRequirement: [],
             budget: 0,
+            meetingDate: new Date(),
+            category: [],
         },
         resolver: zodResolver(validationSchema),
     })
@@ -114,6 +127,8 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
             systemRequirement,
             budget,
             notes,
+            meetingDate,
+            category,
         } = formValue
 
         const { totalTask, completedTask } = taskCount
@@ -132,6 +147,8 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
             currentSystem,
             systemRequirement,
             budget,
+            meetingDate,
+            category,
         }
 
         updateProjectList(values)
@@ -161,7 +178,7 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
                     />
                 </FormItem>
                 <FormItem
-                    label="companySize"
+                    label="Company Size"
                     invalid={Boolean(errors.title)}
                     errorMessage={errors.companySize?.message}
                 >
@@ -200,6 +217,29 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
                                 isMulti
                                 options={picRoleOptions}
                                 value={picRoleOptions.filter((opt) =>
+                                    field.value.includes(opt.value),
+                                )}
+                                onChange={(val) =>
+                                    field.onChange(val.map((v) => v.value))
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+
+                <FormItem
+                    label="Category"
+                    invalid={Boolean(errors.category)}
+                    errorMessage={errors.category?.message}
+                >
+                    <Controller
+                        name="category"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                                isMulti
+                                options={categoryOptions}
+                                value={categoryOptions.filter((opt) =>
                                     field.value.includes(opt.value),
                                 )}
                                 onChange={(val) =>
@@ -267,6 +307,38 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
                         render={({ field }) => (
                             <Input type="text" autoComplete="off" {...field} />
                         )}
+                    />
+                </FormItem>
+                <FormItem
+                    label="Meeting Date"
+                    invalid={!!errors.meetingDate}
+                    errorMessage={errors.meetingDate?.message}
+                >
+                    <Controller
+                        name="meetingDate"
+                        control={control}
+                        render={({ field }) => {
+                            let displayDate = ''
+                            if (
+                                field.value instanceof Date &&
+                                !isNaN(field.value.getTime())
+                            ) {
+                                displayDate = field.value
+                                    .toISOString()
+                                    .split('T')[0]
+                            }
+
+                            return (
+                                <Input
+                                    type="date"
+                                    value={displayDate}
+                                    onChange={(e) => {
+                                        const newDate = new Date(e.target.value)
+                                        field.onChange(newDate)
+                                    }}
+                                />
+                            )
+                        }}
                     />
                 </FormItem>
 

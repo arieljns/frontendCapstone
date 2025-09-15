@@ -4,7 +4,11 @@ import Input from '@/components/ui/Input'
 import Select, { Option as DefaultOption } from '@/components/ui/Select'
 import Avatar from '@/components/ui/Avatar'
 import { FormItem } from '@/components/ui/Form'
-import NumericInput from '@/components/shared/NumericInput'
+import {
+    sentiment_labels,
+    excitement_levels,
+    status
+} from '@/constants/sentiment.constant'
 import { countryList } from '@/constants/countries.constant'
 import { Controller } from 'react-hook-form'
 import { components } from 'react-select'
@@ -17,6 +21,16 @@ type CountryOption = {
     label: string
     dialCode: string
     value: string
+}
+
+type SentimentOption = {
+    value: string
+    display: string
+}
+
+type StatusOption = {
+    value: string
+    label: string
 }
 
 const { Control } = components
@@ -73,110 +87,73 @@ const CustomerDetailSection = ({
 
     return (
         <Card id="customerDetails">
-            <h4 className="mb-6">Customer details</h4>
+            <h4 className="mb-6">Customer Status</h4>
             <div className="grid md:grid-cols-2 gap-4">
                 <FormItem
-                    label="First Name"
-                    invalid={Boolean(errors.firstName)}
-                    errorMessage={errors.firstName?.message}
+                    label="Sentiment"
+                    invalid={Boolean(errors.sentiment)}
+                    errorMessage={errors.sentiment?.message}
                 >
                     <Controller
-                        name="firstName"
+                        name="sentiment"
                         control={control}
                         render={({ field }) => (
-                            <Input
-                                type="text"
-                                autoComplete="off"
-                                placeholder="First Name"
+                            <Select<SentimentOption>
+                                options={sentiment_labels}
                                 {...field}
-                            />
-                        )}
-                    />
-                </FormItem>
-                <FormItem
-                    label="User Name"
-                    invalid={Boolean(errors.lastName)}
-                    errorMessage={errors.lastName?.message}
-                >
-                    <Controller
-                        name="lastName"
-                        control={control}
-                        render={({ field }) => (
-                            <Input
-                                type="text"
-                                autoComplete="off"
-                                placeholder="Last Name"
-                                {...field}
-                            />
-                        )}
-                    />
-                </FormItem>
-            </div>
-            <FormItem
-                label="Email"
-                invalid={Boolean(errors.email)}
-                errorMessage={errors.email?.message}
-            >
-                <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => (
-                        <Input
-                            type="email"
-                            autoComplete="off"
-                            placeholder="Email"
-                            {...field}
-                        />
-                    )}
-                />
-            </FormItem>
-            <div className="flex items-end gap-4 w-full">
-                <FormItem
-                    invalid={
-                        Boolean(errors.phoneNumber) || Boolean(errors.dialCode)
-                    }
-                >
-                    <label className="form-label mb-2">Phone number</label>
-                    <Controller
-                        name="dialCode"
-                        control={control}
-                        render={({ field }) => (
-                            <Select<CountryOption>
-                                options={dialCodeList}
-                                {...field}
-                                className="w-[150px]"
-                                components={{
-                                    Option: CustomSelectOption,
-                                    Control: CustomControl,
-                                }}
-                                placeholder=""
-                                value={dialCodeList.filter(
-                                    (option) => option.dialCode === field.value,
+                                placeholder="Select sentiment"
+                                value={sentiment_labels.filter(
+                                    (option) => option.value === field.value,
                                 )}
                                 onChange={(option) =>
-                                    field.onChange(option?.dialCode)
+                                    field.onChange(option?.value)
                                 }
                             />
                         )}
                     />
                 </FormItem>
                 <FormItem
-                    className="w-full"
-                    invalid={
-                        Boolean(errors.phoneNumber) || Boolean(errors.dialCode)
-                    }
-                    errorMessage={errors.phoneNumber?.message}
+                    label="Excitement Level"
+                    invalid={Boolean(errors.excitementLevel)}
+                    errorMessage={errors.excitementLevel?.message}
                 >
                     <Controller
-                        name="phoneNumber"
+                        name="excitementLevel"
                         control={control}
                         render={({ field }) => (
-                            <NumericInput
-                                autoComplete="off"
-                                placeholder="Phone Number"
-                                value={field.value}
-                                onChange={field.onChange}
-                                onBlur={field.onBlur}
+                            <Select<SentimentOption>
+                                options={excitement_levels}
+                                {...field}
+                                placeholder="Excitement Level"
+                                value={excitement_levels.filter(
+                                    (option) => option.value === field.value,
+                                )}
+                                onChange={(option) =>
+                                    field.onChange(option?.value)
+                                }
+                            />
+                        )}
+                    />
+                </FormItem>
+                <FormItem
+                    label="Status"
+                    invalid={Boolean(errors.status)}
+                    errorMessage={errors.status?.message}
+                >
+                    <Controller
+                        name="status"
+                        control={control}
+                        render={({ field }) => (
+                            <Select<SentimentOption>
+                                options={status}
+                                {...field}
+                                placeholder="Excitement Level"
+                                value={status.filter(
+                                    (option) => option.value === field.value,
+                                )}
+                                onChange={(option) =>
+                                    field.onChange(option?.value)
+                                }
                             />
                         )}
                     />
