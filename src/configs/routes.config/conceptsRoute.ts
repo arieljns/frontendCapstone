@@ -34,11 +34,11 @@ const conceptsRoute: Routes = [
     },
     {
         key: 'concepts.customers.customerList',
-        path: `${CONCEPTS_PREFIX_PATH}/customers/customer-list`,
+        path: `${CONCEPTS_PREFIX_PATH}/members`,
         component: lazy(
             () => import('@/views/concepts/customers/CustomerList'),
         ),
-        authority: [ADMIN, USER],
+        authority: [ADMIN],
     },
     {
         key: 'concepts.customers.customerEdit',
@@ -89,7 +89,7 @@ const conceptsRoute: Routes = [
         key: 'concepts.products.productList',
         path: `${CONCEPTS_PREFIX_PATH}/products/product-list`,
         component: lazy(() => import('@/views/concepts/products/ProductList')),
-        authority: [ADMIN, USER],
+        authority: [ADMIN],
     },
     {
         key: 'concepts.products.productEdit',

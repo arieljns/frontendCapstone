@@ -8,7 +8,6 @@ import { apiGetProductList } from '@/services/ProductService'
 import ProductSelectSection from './components/ProductSelectSection'
 import CustomerDetailSection from './components/CustomerDetailSection'
 import FollowupSection from './components/FollowupSection'
-import PaymentMethodSection from './components/PaymentMethodSection'
 import Navigator from './components/Navigator'
 import { useOrderFormStore } from './store/orderFormStore'
 import useLayoutGap from '@/utils/hooks/useLayoutGap'
@@ -18,7 +17,6 @@ import isEmpty from 'lodash/isEmpty'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import type { ZodType } from 'zod'
 import type { ReactNode } from 'react'
 import type {
     GetProductListResponse,
@@ -35,6 +33,7 @@ type OrderFormProps = {
     defaultValues?: OrderFormSchema
     defaultProducts?: SelectedProduct[]
     newOrder?: boolean
+    beforeMeeting: object
 } & CommonProps
 
 const SelectedProductSchema = z.object({
@@ -65,11 +64,22 @@ const baseValidationSchema = z.object({
         .min(1, { message: 'Total Employee must exist' }),
     discountRate: z.string().min(1, { message: 'Discount Rate Required' }),
     termIn: z.string().min(1, { message: 'Term In required' }),
+    beforeMeeting: z
+        .string()
+        .min(1, { message: 'must include before meeting number' }),
 })
 
 const OrderForm = (props: OrderFormProps) => {
-    const { onFormSubmit, children, defaultValues, defaultProducts } = props
+    const {
+        onFormSubmit,
+        children,
+        defaultValues,
+        defaultProducts,
+        beforeMeeting,
+    } = props
     const { projectList } = useProjectListStore()
+
+    console.log('this is the param in order form', beforeMeeting?.id)
 
     console.log(projectList)
 
@@ -141,11 +151,11 @@ const OrderForm = (props: OrderFormProps) => {
         formState: { errors },
         control,
     } = useForm<OrderFormSchema>({
-        // defaultValues: {
-        //     paymentMethod: 'creditOrDebitCard',
-        //     ...(defaultValues ? defaultValues : {}),
-        // },
         resolver: zodResolver(baseValidationSchema),
+        defaultValues: {
+            ...defaultValues,
+            beforeMeeting: beforeMeeting.id,
+        },
     })
 
     const productOption = listOfProducts.map((product) => ({
@@ -165,7 +175,6 @@ const OrderForm = (props: OrderFormProps) => {
     useEffect(() => {
         console.log('Products watched:', products)
     }, [products])
-    const selectedPaymentMethod = watch('paymentMethod', '')
 
     return (
         <div className="flex">

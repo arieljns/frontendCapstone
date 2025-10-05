@@ -63,7 +63,7 @@ const SideNav = ({
                 style={{ height: HEADER_HEIGHT }}
             >
                 <h4 className="mx-4 text-ellipsis text-bold text-md">
-                    Sales<span className="text-green-600">ify</span>
+                    Sales<span className="text-red-600">ify</span>
                 </h4>
             </Link>
             <div className={classNames('side-nav-content', contentClass)}>

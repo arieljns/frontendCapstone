@@ -75,6 +75,23 @@ const purpleTheme: ThemeVariables = {
     },
 }
 
+const redTheme: ThemeVariables = {
+    light: {
+        primary: '#f22929', // Base red
+        primaryDeep: '#c01f1f', // Darker shade
+        primaryMild: '#f55b5b', // Lighter shade
+        primarySubtle: '#f229291a', // Transparent / subtle
+        neutral: '#ffffff',
+    },
+    dark: {
+        primary: '#f22929',
+        primaryDeep: '#c01f1f',
+        primaryMild: '#f55b5b',
+        primarySubtle: '#f229291a',
+        neutral: '#ffffff',
+    },
+}
+
 const orangeTheme: ThemeVariables = {
     light: {
         primary: '#fb732c',
@@ -98,6 +115,7 @@ const presetThemeSchemaConfig: Record<string, ThemeVariables> = {
     green: greenTheme,
     purple: purpleTheme,
     orange: orangeTheme,
+    red: redTheme,
 }
 
 export default presetThemeSchemaConfig

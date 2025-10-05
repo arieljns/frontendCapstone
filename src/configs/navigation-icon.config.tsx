@@ -86,12 +86,14 @@ import {
     PiNotePencilDuotone,
     PiKanbanDuotone,
     PiRobotDuotone,
+    PiFunnelDuotone
 } from 'react-icons/pi'
 import type { JSX } from 'react'
 
 export type NavigationIcons = Record<string, JSX.Element>
 
 const navigationIcon: NavigationIcons = {
+    salesFunnel:<PiFunnelDuotone />,
     uiComponents: <PiPuzzlePieceDuotone />,
     common: <PiSwatchesDuotone />,
     uiCommonButton: <PiCursorClickDuotone />,
@@ -137,7 +139,7 @@ const navigationIcon: NavigationIcons = {
     uiGraphChart: <PiChartLineUpDuotone />,
     uiGraphMaps: <PiMapTrifoldDuotone />,
     concepts: <PiLightbulbDuotone />,
-    customers: <PiUsersDuotone />,
+    members: <PiUsersDuotone />,
     customerList: <PiUserListDuotone />,
     customerEdit: <PiPencilSimpleLineDuotone />,
     customerCreate: <PiUserPlusDuotone />,

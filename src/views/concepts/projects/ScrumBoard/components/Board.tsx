@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import Dialog from '@/components/ui/Dialog'
 import Spinner from '@/components/ui/Spinner'
 import AdaptiveCard from '@/components/shared/AdaptiveCard'
@@ -24,6 +24,7 @@ import type {
     Ticket,
 } from '../types'
 import type { DropResult } from '@hello-pangea/dnd'
+import { columnsContent, columnTitle } from '../boardColumn.constants'
 
 export type BoardProps = {
     containerHeight?: boolean
@@ -146,6 +147,10 @@ const Board = (props: BoardProps) => {
         updateColumns(data.quoteMap)
     }
 
+    // useEffect(() => {
+    //     console.log('this is columns ', columns)
+    // }, [columns])
+
     return (
         <>
             <AdaptiveCard className="h-full" bodyClass="h-full flex flex-col">
@@ -165,7 +170,7 @@ const Board = (props: BoardProps) => {
                                 {...provided.droppableProps}
                             >
                                 <div className="scrumboard-body flex max-w-full overflow-x-auto h-full mt-4 gap-4">
-                                    {ordered.map((key, index) => (
+                                    {Object.keys(columns).map((key, index) => (
                                         <BoardColumn
                                             key={key}
                                             index={index}

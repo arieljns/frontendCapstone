@@ -11,6 +11,7 @@ import { z } from 'zod'
 import type { ZodType } from 'zod'
 import type { CommonProps } from '@/@types/common'
 import type { ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface SignInFormProps extends CommonProps {
     disableSubmit?: boolean
@@ -43,8 +44,8 @@ const SignInForm = (props: SignInFormProps) => {
         control,
     } = useForm<SignInFormSchema>({
         defaultValues: {
-            email: 'admin-01@ecme.com',
-            password: '123Qwe',
+            email: 'Gabriella@mekari.com',
+            password: 'member123',
         },
         resolver: zodResolver(validationSchema),
     })
@@ -53,6 +54,7 @@ const SignInForm = (props: SignInFormProps) => {
 
     const onSignIn = async (values: SignInFormSchema) => {
         const { email, password } = values
+
 
         if (!disableSubmit) {
             setSubmitting(true)

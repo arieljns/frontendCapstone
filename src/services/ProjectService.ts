@@ -60,7 +60,7 @@ export async function apiGetProject<T, U extends Record<string, unknown>>({
 
 export async function apiGetScrumBoards<T>() {
     return ApiService.fetchDataWithAxios<T>({
-        url: '/projects/scrum-board',
+        url: '/kanban',
         method: 'get',
     })
 }

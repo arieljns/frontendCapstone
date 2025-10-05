@@ -37,7 +37,6 @@ export const useProjectListStore = create<ProjectListState & ProjectListAction>(
             })),
         updateProjectFavorite: (payload) => {
             set((state) => {
-                console.log('updating project favorite', payload)
                 const { id, value } = payload
                 const newList = state.projectList.map((project) => {
                     if (project.id === id) {

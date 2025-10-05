@@ -31,7 +31,27 @@ const dashboardsNavigationConfig: NavigationTree[] = [
                 translateKey: 'nav.dashboard.ecommerce',
                 icon: 'dashboard',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN, USER],
+                authority: [USER],
+                subMenu: [],
+            },
+            {
+                key: 'dashboard.admin',
+                path: `${DASHBOARDS_PREFIX_PATH}/admin/analytics`,
+                title: 'Team Analytics',
+                translateKey: 'nav.dashboard.admin',
+                icon: 'dashboard',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN],
+                subMenu: [],
+            },
+            {
+                key: 'dashboard.funnel',
+                path: `${DASHBOARDS_PREFIX_PATH}/funnel`,
+                title: 'Sales Funnel',
+                translateKey: 'nav.dashboard.funnel',
+                icon: 'salesFunnel',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN],
                 subMenu: [],
             },
             {
@@ -41,17 +61,17 @@ const dashboardsNavigationConfig: NavigationTree[] = [
                 translateKey: 'nav.dashboard.project',
                 icon: 'dashboardBeforeMeeting',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN, USER],
+                authority: [USER],
                 subMenu: [],
             },
             {
                 key: 'dashboard.after.meeting',
-                path: `${DASHBOARDS_PREFIX_PATH}/after-meeting`,
+                path: `${DASHBOARDS_PREFIX_PATH}/meeting-debrief`,
                 title: 'Meeting Debrief',
                 translateKey: 'nav.after-meeting',
                 icon: 'dashboardAfterMeeting',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN, USER],
+                authority: [USER],
                 meta: {
                     description: {
                         translateKey: 'nav.calendarDesc',
@@ -77,13 +97,29 @@ const dashboardsNavigationConfig: NavigationTree[] = [
                 subMenu: [],
             },
             {
+                key: 'concepts.products.productList',
+                path: `${CONCEPTS_PREFIX_PATH}/members`,
+                title: 'Team Members',
+                translateKey: 'nav.members',
+                icon: 'members',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [ADMIN],
+                meta: {
+                    description: {
+                        translateKey: 'nav.members',
+                        label: 'Manage Team Members',
+                    },
+                },
+                subMenu: [],
+            },
+            {
                 key: 'concepts.projects.kanban.board',
                 path: `${CONCEPTS_PREFIX_PATH}/projects/scrum-board`,
                 title: 'Kanban Board',
                 translateKey: 'nav.conceptsProjects.scrumBoard',
                 icon: 'projectScrumBoard',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN, USER],
+                authority: [USER],
                 meta: {
                     description: {
                         translateKey: 'nav.conceptsProjects.scrumBoardDesc',
@@ -99,7 +135,7 @@ const dashboardsNavigationConfig: NavigationTree[] = [
                 translateKey: 'nav.calendar',
                 icon: 'calendar',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [ADMIN, USER],
+                authority: [USER],
                 meta: {
                     description: {
                         translateKey: 'nav.calendarDesc',
@@ -108,7 +144,6 @@ const dashboardsNavigationConfig: NavigationTree[] = [
                 },
                 subMenu: [],
             },
-            
         ],
     },
 ]

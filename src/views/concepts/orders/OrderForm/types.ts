@@ -42,6 +42,10 @@ export type BillingAddressFields = {
     activationAgreement: string
 }
 
+export type ParamField = {
+    beforeMeeting: number
+}
+
 export type PaymentType = 'creditOrDebitCard' | 'bankTransfer' | ''
 
 export type GetPaymentMethodFields<T extends PaymentType> =
@@ -67,17 +71,12 @@ export interface PaymentMethodFields {
 
 type BaseOrderFormSchema = CustomerDetailsFields &
     BillingAddressFields &
-    ProductTermIn &
-    PaymentMethodFields & {
+    ParamField &
+    ProductTermIn & {
         products: Products[]
     }
 
-export type OrderFormSchema = BaseOrderFormSchema &
-    (
-        | GetPaymentMethodFields<'creditOrDebitCard'>
-        | GetPaymentMethodFields<'bankTransfer'>
-    )
-
+export type OrderFormSchema = BaseOrderFormSchema
 export type FormSectionBaseProps = {
     control: Control<OrderFormSchema>
     errors: FieldErrors<OrderFormSchema>

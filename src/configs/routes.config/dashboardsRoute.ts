@@ -8,7 +8,7 @@ const dashboardsRoute: Routes = [
         key: 'dashboard',
         path: `${DASHBOARDS_PREFIX_PATH}/ecommerce`,
         component: lazy(() => import('@/views/dashboards/EcommerceDashboard')),
-        authority: [ADMIN, USER],
+        authority: [USER],
         meta: {
             pageContainerType: 'contained',
         },
@@ -32,10 +32,30 @@ const dashboardsRoute: Routes = [
         },
     },
     {
+        key: 'dashboard.funnel',
+        path: `${DASHBOARDS_PREFIX_PATH}/funnel`,
+        component: lazy(() => import('@/views/dashboards/FunnelDashboard')),
+        authority: [ADMIN],
+        meta: {
+            pageContainerType: 'contained',
+        },
+    },
+
+    {
         key: 'dashboard.analytic',
         path: `${DASHBOARDS_PREFIX_PATH}/analytic`,
         component: lazy(() => import('@/views/dashboards/AnalyticDashboard')),
-        authority: [ADMIN, USER],
+        authority: [ADMIN],
+        meta: {
+            pageContainerType: 'contained',
+            pageBackgroundType: 'plain',
+        },
+    },
+    {
+        key: 'dashboard.admin',
+        path: `${DASHBOARDS_PREFIX_PATH}/admin/analytics`,
+        component: lazy(() => import('@/views/dashboards/AdminDashboard')),
+        authority: [ADMIN],
         meta: {
             pageContainerType: 'contained',
             pageBackgroundType: 'plain',
@@ -43,9 +63,11 @@ const dashboardsRoute: Routes = [
     },
     {
         key: 'dashboard.after.meeting',
-        path: `${DASHBOARDS_PREFIX_PATH}/after-meeting`,
-        component: lazy(() => import('@/views/dashboards/AfterMeetingDashboard')),
-        authority: [ADMIN, USER],
+        path: `${DASHBOARDS_PREFIX_PATH}/meeting-debrief`,
+        component: lazy(
+            () => import('@/views/dashboards/AfterMeetingDashboard'),
+        ),
+        authority: [USER],
         meta: {
             pageContainerType: 'contained',
             pageBackgroundType: 'plain',

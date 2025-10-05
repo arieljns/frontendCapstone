@@ -17,7 +17,7 @@ type ProjectOverview = {
     data: Project
 }
 
-const StatisticCard = ({
+export const StatisticCard = ({
     title,
     className,
     icon,

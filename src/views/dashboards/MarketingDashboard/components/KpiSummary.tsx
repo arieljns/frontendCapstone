@@ -71,7 +71,7 @@ const KpiSummary = ({ data }: KpiSummaryProps) => {
                     title="Total marketing spend"
                     value={
                         <NumericFormat
-                            prefix="$"
+                            prefix="Rp"
                             displayType="text"
                             value={data.totalMarketingSpend.value}
                             thousandSeparator={true}

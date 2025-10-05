@@ -6,23 +6,22 @@ import Container from '@/components/shared/Container'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import OrderForm from '../OrderForm'
 import sleep from '@/utils/sleep'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { TbTrash } from 'react-icons/tb'
 import type { OrderFormSchema } from '../OrderForm'
-import { useParams } from 'react-router-dom'
+import { apiPostMeetingDebrief } from '@/services/OrderService'
 
 const OrderCreate = () => {
     const navigate = useNavigate()
 
-    console.log(useParams())
+    const parameters = useParams()
 
     const [discardConfirmationOpen, setDiscardConfirmationOpen] =
         useState(false)
     const [isSubmiting, setIsSubmiting] = useState(false)
 
     const handleFormSubmit = async (values: OrderFormSchema) => {
-        console.log('This is the form values being submitted:', values)
-        console.log('it is submitted')
+        await apiPostMeetingDebrief(values)
         setIsSubmiting(true)
         await sleep(800)
         setIsSubmiting(false)
@@ -51,7 +50,10 @@ const OrderCreate = () => {
 
     return (
         <>
-            <OrderForm onFormSubmit={handleFormSubmit}>
+            <OrderForm
+                beforeMeeting={parameters}
+                onFormSubmit={handleFormSubmit}
+            >
                 <Container>
                     <div className="flex items-center justify-between px-8">
                         <span></span>

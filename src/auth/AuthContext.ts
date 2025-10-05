@@ -1,47 +1,33 @@
-// import { createContext } from 'react'
-// import type {
-//     SignInCredential,
-//     SignUpCredential,
-//     AuthResult,
-//     User,
-//     OauthSignInCallbackPayload,
-// } from '@/@types/auth'
+import { createContext } from 'react'
+import type {
+    SignInCredential,
+    SignUpCredential,
+    AuthResult,
+    User,
+} from '@/@types/auth'
 
-// type Auth = {
-//     authenticated: boolean
-//     user: User
-//     signIn: (values: SignInCredential) => AuthResult
-//     signUp: (values: SignUpCredential) => AuthResult
-//     signOut: () => void
-//     oAuthSignIn: (
-//         callback: (payload: OauthSignInCallbackPayload) => void,
-//     ) => void
-// }
+type Auth = {
+    authenticated: boolean
+    user: User
+    signIn: (values: SignInCredential) => AuthResult
+    signUp: (values: SignUpCredential) => AuthResult
+    signOut: () => void
+}
 
-// const defaultFunctionPlaceHolder = async (): AuthResult => {
-//     await new Promise((resolve) => setTimeout(resolve, 0))
-//     return {
-//         status: '',
-//         message: '',
-//     }
-// }
+const defaultFunctionPlaceHolder = async (): AuthResult => {
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    return {
+        status: '',
+        message: '',
+    }
+}
 
-// const defaultOAuthSignInPlaceHolder = (
-//     callback: (payload: OauthSignInCallbackPayload) => void,
-// ): void => {
-//     callback({
-//         onSignIn: () => {},
-//         redirect: () => {},
-//     })
-// }
+const AuthContext = createContext<Auth>({
+    authenticated: false,
+    user: {},
+    signIn: async () => defaultFunctionPlaceHolder(),
+    signUp: async () => defaultFunctionPlaceHolder(),
+    signOut: () => {},
+})
 
-// const AuthContext = createContext<Auth>({
-//     authenticated: false,
-//     user: {},
-//     signIn: async () => defaultFunctionPlaceHolder(),
-//     signUp: async () => defaultFunctionPlaceHolder(),
-//     signOut: () => {},
-//     oAuthSignIn: defaultOAuthSignInPlaceHolder,
-// })
-
-// export default AuthContext
+export default AuthContext

@@ -5,11 +5,11 @@ import { useProjectListStore } from '../../projects/ProjectList/store/projectLis
 
 export default function QuotationHeader() {
     const { id } = useParams<{ id: string }>()
-    console.log(typeof id)
+    // console.log(typeof id)
 
     const { projectList } = useProjectListStore()
 
-    console.log('This is the project list:', projectList)
+    // console.log('This is the project list:', projectList)
 
     const quotationData = id
         ? projectList.find((project) => String(project.id) === id)

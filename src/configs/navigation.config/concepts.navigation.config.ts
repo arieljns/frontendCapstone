@@ -99,7 +99,7 @@ const conceptsNavigationConfig: NavigationTree[] = [
                             description: {
                                 translateKey:
                                     'nav.conceptsProjects.scrumBoardDesc',
-                                label: 'Manage your scrum workflow',
+                                label: 'Manage your sales pipeline ',
                             },
                         },
                         subMenu: [],

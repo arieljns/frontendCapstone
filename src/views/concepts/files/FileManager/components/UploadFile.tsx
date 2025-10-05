@@ -106,7 +106,7 @@ const UploadFile = () => {
             >
                 <FaFileCsv size={18} />
                 <div>
-                    Upload From <span className="text-green-600">CSV</span>
+                    Upload From <span className="text-red-600">CSV</span>
                 </div>
             </Button>
             <Dialog

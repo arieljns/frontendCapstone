@@ -28,10 +28,9 @@ export const createCardObject = (): Ticket => {
 }
 
 export const taskLabelColors: Record<string, string> = {
-    'Live issue': 'bg-rose-200 dark:bg-rose-200 dark:text-gray-900',
-    Task: 'bg-blue-200 dark:bg-blue-200 dark:text-gray-900',
-    Bug: 'bg-amber-200 dark:bg-amber-200 dark:text-gray-900',
-    'Low priority': 'bg-purple-200 dark:bg-purple-200 dark:text-gray-900',
+    Hot: 'bg-rose-200 dark:bg-rose-200 dark:text-gray-900',
+    Medium: 'bg-blue-200 dark:bg-blue-200 dark:text-gray-900',
+    Cold: 'bg-amber-200 dark:bg-amber-200 dark:text-gray-900',
 }
 
-export const labelList = ['Task', 'Bug', 'Live issue', 'Low priority']
+export const labelList = ['Hot', 'Medium', 'Cold']

@@ -14,7 +14,7 @@ const ScrumBoardHeader = ({
 
     const { updateDialogView, openDialog } = useScrumBoardStore()
 
-    const onAddMember = () => {
+    const onAddTicket = () => {
         updateDialogView('ADD_MEMBER')
         openDialog()
     }
@@ -27,8 +27,8 @@ const ScrumBoardHeader = ({
     return (
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
-                <h3>Sprint 2</h3>
-                <p className="font-semibold">Web App Project</p>
+                <h3>Kanban</h3>
+                <p className="font-semibold">Mekari Talenta Sales Pipeline</p>
             </div>
             <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
                 <div className="flex flex-col md:flex-row md:items-center gap-4">
@@ -41,7 +41,7 @@ const ScrumBoardHeader = ({
                         <Button
                             size="sm"
                             icon={<TbUserPlus />}
-                            onClick={onAddMember}
+                            onClick={onAddTicket}
                         />
                         <Button
                             size="sm"

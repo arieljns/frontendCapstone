@@ -61,8 +61,8 @@ const AddNewMemberContent = () => {
     return (
         <div>
             <div className="text-center mb-6">
-                <h4 className="mb-1">Add people</h4>
-                <p>Invite existing team member to this project.</p>
+                <h4 className="mb-1">Add Ticket</h4>
+                <p>Insert existing ticket to the sales pipeline.</p>
             </div>
             <Input
                 ref={inputRef}

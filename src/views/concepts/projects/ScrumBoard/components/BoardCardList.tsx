@@ -33,13 +33,15 @@ type InnerListProps = {
 function InnerList(props: InnerListProps) {
     const { dropProvided, contents, ...rest } = props
 
+    // console.log('inner list content:', contents)
+
     return (
         <div ref={dropProvided.innerRef} className="board-dropzone h-full">
             <div className="px-5 h-full">
                 {contents?.map((item, index) => (
                     <Draggable
-                        key={item.id}
-                        draggableId={item.id}
+                        key={item.ticket_id}
+                        draggableId={JSON.stringify(item.ticket_id)}
                         index={index}
                     >
                         {(dragProvided) => (

@@ -11,7 +11,7 @@ import type {
 
 export async function apiSignIn(data: SignInCredential) {
     return ApiService.fetchDataWithAxios<SignInResponse>({
-        url: endpointConfig.signIn,
+        url: '/users/sign-in',
         method: 'post',
         data,
     })

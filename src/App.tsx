@@ -14,11 +14,11 @@ function App() {
     return (
         <Theme>
             <BrowserRouter>
-                
+                <AuthProvider>
                     <Layout>
                         <Views />
                     </Layout>
-                
+                </AuthProvider>
             </BrowserRouter>
         </Theme>
     )

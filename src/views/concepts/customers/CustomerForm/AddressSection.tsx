@@ -62,7 +62,6 @@ const AddressSection = ({ control, errors }: AddressSectionProps) => {
                     name="currentSystem"
                     control={control}
                     render={({ field }) => {
-                        console.log('Current selected values:', field.value)
                         return (
                             <Select<PackageOption, true>
                                 isMulti
