@@ -41,6 +41,14 @@ const conceptsRoute: Routes = [
         authority: [ADMIN],
     },
     {
+        key: 'concepts.meetingDebriefEdit',
+        path: `${CONCEPTS_PREFIX_PATH}/meeting-debrief-edit/:id`,
+        component: lazy(
+            () => import('@/views/concepts/meetingDebriefEdit/OrderForm'),
+        ),
+        authority: [USER],
+    },
+    {
         key: 'concepts.customers.customerEdit',
         path: `${CONCEPTS_PREFIX_PATH}/customers/customer-edit/:id`,
         component: lazy(

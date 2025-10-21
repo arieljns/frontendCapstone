@@ -15,7 +15,7 @@ import {
     TbRepeat,
 } from 'react-icons/tb'
 import type { GetProjectListResponse } from '@/views/concepts/projects/ProjectList/types'
-import { Button, Dropdown } from '@/components/ui'
+import { Button, Dropdown, Pagination } from '@/components/ui'
 import { HiOutlineDocumentReport } from 'react-icons/hi'
 import { useState } from 'react'
 import Notification from '@/components/ui/Notification'
@@ -29,6 +29,8 @@ const MeetingDebriefList = () => {
     const [discardId, setDiscardId] = useState('')
     const [meetingId, setMeetingId] = useState('')
     const [stageConfirmationOpen, setStageConfirmationOpen] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
+    const pageSize = 6
 
     useSWR(['/api/projects'], () => apiGetProjects<GetProjectListResponse>(), {
         revalidateOnFocus: false,
@@ -93,12 +95,17 @@ const MeetingDebriefList = () => {
     const meetingStage = projectList.filter(
         (project) => project.isMeetingStage === true,
     )
+    const total = meetingStage.length
+    const paginatedData = meetingStage.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    )
     return (
         <div>
             <div className="mt-8">
                 <h5 className="mb-3">Favorite</h5>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 bottom-5 gap-6">
-                    {meetingStage.map((project) => (
+                    {paginatedData.map((project) => (
                         <Card
                             key={project.id}
                             bodyClass="h-full flex flex-col justify-between"
@@ -120,15 +127,20 @@ const MeetingDebriefList = () => {
                                         <TbTrash size={16} className="mr-2" />
                                         Delete
                                     </Dropdown.Item>
-                                    <Dropdown.Item
-                                        className="flex items-center "
-                                        onClick={() =>
-                                            handleMoveStage(project.id)
-                                        }
-                                    >
-                                        <TbRepeat size={16} className="mr-2" />
-                                        Move Meeting Stage
-                                    </Dropdown.Item>
+                                    {project.isMeetingStage === false && (
+                                        <Dropdown.Item
+                                            className="flex items-center "
+                                            onClick={() =>
+                                                handleMoveStage(project.id)
+                                            }
+                                        >
+                                            <TbRepeat
+                                                size={16}
+                                                className="mr-2"
+                                            />
+                                            Move Meeting Stage
+                                        </Dropdown.Item>
+                                    )}
                                 </Dropdown>
                             </div>
 
@@ -188,6 +200,17 @@ const MeetingDebriefList = () => {
                         </Card>
                     ))}
                 </div>
+                {total > pageSize && (
+                    <div className="flex justify-center mt-8">
+                        <Pagination
+                            total={total}
+                            pageSize={pageSize}
+                            currentPage={currentPage}
+                            onChange={(page) => setCurrentPage(page)}
+                            displayTotal
+                        />
+                    </div>
+                )}
             </div>
 
             <ConfirmDialog

@@ -86,7 +86,14 @@ const BoardCard = (props: BoardCardProps) => {
             <div className="flex items-center justify-between">
                 {/* <UsersAvatarGroup avatarProps={{ size: 25 }} users={members} /> */}
                 <div className="flex justify-center items-center gap-4">
-                    <div className="font-semibold"> Rp {ticket_dealValue}</div>
+                    <div className="font-semibold">
+                        {' '}
+                        {new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR',
+                            maximumFractionDigits: 0,
+                        }).format(ticket_dealValue)}
+                    </div>
                     <IconText
                         className="font-semibold gap-1"
                         icon={<TbMessageCircle className="text-base" />}
@@ -104,7 +111,7 @@ const BoardCard = (props: BoardCardProps) => {
             </div>
             <hr></hr>
             <div className="font-semibold">
-                Expired: {new Date(am_expiredDate).toLocaleDateString('en-GB')}
+                Follow Up: {new Date(am_expiredDate).toLocaleDateString('en-GB')}
             </div>
         </Card>
     )

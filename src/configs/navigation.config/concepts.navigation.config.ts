@@ -413,6 +413,22 @@ const conceptsNavigationConfig: NavigationTree[] = [
                 ],
             },
             {
+                key: 'concepts.meetingDebriefEdit',
+                path: '',
+                title: 'Meeting Debrief Edit',
+                translateKey: 'nav.meeting.debrief.edit',
+                icon: 'customers',
+                type: NAV_ITEM_TYPE_COLLAPSE,
+                authority: [ USER],
+                meta: {
+                    description: {
+                        translateKey: 'nav.conceptsCustomers.customersDesc',
+                        label: 'Customer management',
+                    },
+                },
+                subMenu: [],
+            },
+            {
                 key: 'concepts.account',
                 path: '',
                 title: 'Account',

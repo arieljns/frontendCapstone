@@ -1,16 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Form } from '@/components/ui/Form'
-import Affix from '@/components/shared/Affix'
-import Card from '@/components/ui/Card'
 import Container from '@/components/shared/Container'
 import BottomStickyBar from '@/components/template/BottomStickyBar'
-import ProductSelectSection from './components/ProductSelectSection'
-import CustomerDetailSection from './components/CustomerDetailSection'
-import FollowupSection from './components/FollowupSection'
-import Navigator from './components/Navigator'
+import CustomerDetailSectionEdit from './components/CustomerDetailSection'
 import { useOrderFormStore } from './store/orderFormStore'
-import useLayoutGap from '@/utils/hooks/useLayoutGap'
-import useResponsive from '@/utils/hooks/useResponsive'
 import isEmpty from 'lodash/isEmpty'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,7 +12,11 @@ import type { ReactNode } from 'react'
 import type { OrderFormSchema, SelectedProduct } from './types'
 import type { CommonProps } from '@/@types/common'
 import { listOfProducts } from '@/constants/products.constant'
-import { useProjectListStore } from '../../projects/ProjectList/store/projectListStore'
+import ProductSelectSectionEdit from './components/ProductSelectSection'
+import FollowupSectionEdit from './components/FollowupSection'
+import { useParams } from 'react-router-dom'
+import { useOrderListStore } from '../orders/OrderList/store/orderListStore'
+import useOrderList from '../orders/OrderList/hooks/useOrderlist'
 
 type OrderFormProps = {
     children: ReactNode
@@ -63,25 +60,22 @@ const baseValidationSchema = z.object({
         .min(1, { message: 'must include before meeting number' }),
 })
 
-const OrderForm = (props: OrderFormProps) => {
-    const {
-        onFormSubmit,
-        children,
-        defaultValues,
-        defaultProducts,
-        beforeMeeting,
-    } = props
-    const { projectList } = useProjectListStore()
+const MeetingDebriefFormEdit = (props: OrderFormProps) => {
+    const { onFormSubmit, children, defaultValues, defaultProducts } = props
+    const params = useParams()
 
-    console.log('this is the param in order form', beforeMeeting?.id)
+    const orderList = useOrderListStore((s) => s.orderList)
 
-    console.log(projectList)
+    const orderListFormData = orderList.filter((data) => {
+        return data.id === parseInt(params.id)
+    })
+
+    console.log(
+        'this is the curated list of orderlist data:',
+        orderListFormData,
+    )
 
     const { setSelectedProduct } = useOrderFormStore()
-
-    const { getTopGapValue } = useLayoutGap()
-
-    const { larger } = useResponsive()
 
     useEffect(() => {
         if (defaultProducts) {
@@ -130,7 +124,6 @@ const OrderForm = (props: OrderFormProps) => {
         resolver: zodResolver(baseValidationSchema),
         defaultValues: {
             ...defaultValues,
-            beforeMeeting: beforeMeeting.id,
         },
     })
 
@@ -160,19 +153,9 @@ const OrderForm = (props: OrderFormProps) => {
             >
                 <Container>
                     <div className="flex gap-4">
-                        {larger.xl && (
-                            <div className="w-[360px]">
-                                <Affix offset={getTopGapValue()}>
-                                    <Card>
-                                        <Navigator />
-                                    </Card>
-                                </Affix>
-                            </div>
-                        )}
-
                         <div className="flex-1">
                             <div className="flex flex-col gap-4">
-                                <ProductSelectSection
+                                <ProductSelectSectionEdit
                                     control={control}
                                     productList={listOfProducts}
                                     productOption={productOption}
@@ -180,11 +163,11 @@ const OrderForm = (props: OrderFormProps) => {
                                     errors={errors}
                                     onDerivedChange={setDerived}
                                 />
-                                <CustomerDetailSection
+                                <CustomerDetailSectionEdit
                                     control={control}
                                     errors={errors}
                                 />
-                                <FollowupSection
+                                <FollowupSectionEdit
                                     control={control}
                                     errors={errors}
                                 />
@@ -198,4 +181,4 @@ const OrderForm = (props: OrderFormProps) => {
     )
 }
 
-export default OrderForm
+export default MeetingDebriefFormEdit

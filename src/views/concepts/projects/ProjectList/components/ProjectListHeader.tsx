@@ -15,8 +15,12 @@ export const ProjectListHeader = ({ options }: ProjectListHeaderProps) => {
     return (
         <>
             {options ? (
-                <div className="flex items-center justify-between gap-4 mb-4">
-                    <h3>After Meetings</h3>
+                <div className="">
+                    <h3>Meeting Debrief</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Unde, in!
+                    </p>
                 </div>
             ) : (
                 <div className="flex items-center justify-between gap-4 mb-4">

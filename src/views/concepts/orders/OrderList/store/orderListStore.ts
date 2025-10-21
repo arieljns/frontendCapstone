@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { TableQueries } from '@/@types/common'
-import type { Orders, Filter } from '../types'
+import type { Filter, AgreementResponse } from '../types'
 import dayjs from 'dayjs'
 
 export const initialTableData: TableQueries = {
@@ -22,12 +22,13 @@ export const initialFilterData = {
 export type OrderListState = {
     tableData: TableQueries
     filterData: Filter
-    orderList: Orders
+    orderList: AgreementResponse[]
 }
 
 type OrderListAction = {
     setFilterData: (payload: Filter) => void
     setTableData: (payload: TableQueries) => void
+    setOrderList: (payload: AgreementResponse[]) => void
 }
 
 const initialState: OrderListState = {
@@ -41,5 +42,6 @@ export const useOrderListStore = create<OrderListState & OrderListAction>(
         ...initialState,
         setFilterData: (payload) => set(() => ({ filterData: payload })),
         setTableData: (payload) => set(() => ({ tableData: payload })),
+        setOrderList: (payload) => set(() => ({ orderList: payload })),
     }),
 )

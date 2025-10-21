@@ -16,7 +16,7 @@ import NoMedia from '@/assets/svg/NoMedia'
 import UsersAvatarGroup from '@/components/shared/UsersAvatarGroup'
 import dayjs from 'dayjs'
 import cloneDeep from 'lodash/cloneDeep'
-import { TbPlus, TbDownload, TbTrash } from 'react-icons/tb'
+import { TbPlus, TbDownload, TbTrash, TbBrandWhatsapp } from 'react-icons/tb'
 import isEmpty from 'lodash/isEmpty'
 import { createUID, taskLabelColors, labelList } from '../utils'
 import { Ticket, Comment, Member } from '../types'
@@ -159,59 +159,10 @@ const TicketContent = ({ onTicketClose }: { onTicketClose: () => void }) => {
                         <div className="flex flex-col gap-6">
                             <div className="flex items-center min-h-[30px]">
                                 <div className="font-semibold text-gray-900 dark:text-gray-100 min-w-[150px]">
-                                    Assigned to:
+                                    Whatsapp:
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <UsersAvatarGroup
-                                        className="gap-1"
-                                        avatarProps={{
-                                            className: 'cursor-pointer',
-                                        }}
-                                        avatarGroupProps={{ maxCount: 4 }}
-                                        chained={false}
-                                        users={ticketData.members}
-                                    />
-                                    {boardMembers.length !==
-                                        ticketData.members?.length && (
-                                        <Dropdown
-                                            renderTitle={<AddMoreMember />}
-                                        >
-                                            {boardMembers.map(
-                                                (member) =>
-                                                    !ticketData.members?.some(
-                                                        (m) =>
-                                                            m.id === member.id,
-                                                    ) && (
-                                                        <Dropdown.Item
-                                                            key={member.name}
-                                                            eventKey={member.id}
-                                                            onSelect={
-                                                                onAddMemberClick
-                                                            }
-                                                        >
-                                                            <div className="flex items-center justify-between">
-                                                                <div className="flex items-center">
-                                                                    <Avatar
-                                                                        shape="circle"
-                                                                        size={
-                                                                            22
-                                                                        }
-                                                                        src={
-                                                                            member.img
-                                                                        }
-                                                                    />
-                                                                    <span className="ml-2 rtl:mr-2">
-                                                                        {
-                                                                            member.name
-                                                                        }
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </Dropdown.Item>
-                                                    ),
-                                            )}
-                                        </Dropdown>
-                                    )}
+                                    <TbBrandWhatsapp />
                                 </div>
                             </div>
                             <div className="flex items-center min-h-[30px]">
@@ -266,7 +217,7 @@ const TicketContent = ({ onTicketClose }: { onTicketClose: () => void }) => {
                             </div>
                             <div className="flex items-center min-h-[30px]">
                                 <div className="font-semibold text-gray-900 dark:text-gray-100 min-w-[150px]">
-                                    Due date:
+                                    Follow Up Date:
                                 </div>
                                 <span className="font-semibold">
                                     {dayjs(ticketData.dueDate).format(
@@ -287,81 +238,36 @@ const TicketContent = ({ onTicketClose }: { onTicketClose: () => void }) => {
                         </div>
                         <Tabs className="mt-6" defaultValue="comments">
                             <TabList>
-                                <TabNav value="comments">Comments</TabNav>
+                                <TabNav value="comments">Meeting Brief</TabNav>
                                 <TabNav value="attachments">Attachments</TabNav>
                             </TabList>
                             <div className="p-4">
                                 <TabContent value="comments">
-                                    <div className="w-full">
-                                        {ticketData.comments &&
-                                            ticketData?.comments?.length >
-                                                0 && (
-                                                <>
-                                                    {ticketData.comments.map(
-                                                        (comment) => (
-                                                            <div
-                                                                key={comment.id}
-                                                                className="mb-3 flex"
-                                                            >
-                                                                <div className="mt-2">
-                                                                    <Avatar
-                                                                        shape="circle"
-                                                                        src={
-                                                                            comment.src
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                                <div className="ml-2 rtl:mr-2 p-3 rounded w-100">
-                                                                    <div className="flex items-center mb-2">
-                                                                        <span className="font-semibold text-gray-900 dark:text-gray-100">
-                                                                            {
-                                                                                comment.name
-                                                                            }
-                                                                        </span>
-                                                                        <span className="mx-1">
-                                                                            {' '}
-                                                                            |{' '}
-                                                                        </span>
-                                                                        <span>
-                                                                            {dayjs(
-                                                                                comment.date,
-                                                                            ).format(
-                                                                                'DD MMMM YYYY',
-                                                                            )}
-                                                                        </span>
-                                                                    </div>
-                                                                    <p className="mb-0">
-                                                                        {
-                                                                            comment.message
-                                                                        }
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        ),
-                                                    )}
-                                                </>
-                                            )}
-                                        <div className="mb-3 flex gap-2">
-                                            <Avatar
-                                                shape="circle"
-                                                src="/img/avatars/thumb-1.jpg"
-                                            />
-                                            <div className="w-full relative">
-                                                <Input
-                                                    ref={commentInput}
-                                                    textArea
-                                                    placeholder="Write comment"
-                                                />
-                                                <div className="absolute bottom-4 right-4">
-                                                    <div
-                                                        className="cursor-pointer font-semibold text-primary "
-                                                        onClick={() =>
-                                                            submitComment()
-                                                        }
-                                                    >
-                                                        Send
-                                                    </div>
+                                    <div className="flex">
+                                        <div className="w-full">
+                                            <div className="flex items-center min-h-[50px]">
+                                                <div className="font-semibold text-gray-900 dark:text-gray-100 min-w-[150px]">
+                                                    Company Name:
                                                 </div>
+                                                <span className="font-semibold">
+                                                    PT Tri Jaya Coco
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center min-h-[50px]">
+                                                <div className="font-semibold text-gray-900 dark:text-gray-100 min-w-[150px]">
+                                                    Total Amount:
+                                                </div>
+                                                <span className="font-semibold">
+                                                    Rp. 10.900.890
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center min-h-[50px]">
+                                                <div className="font-semibold text-gray-900 dark:text-gray-100 min-w-[150px]">
+                                                    MRR:
+                                                </div>
+                                                <span className="font-semibold">
+                                                    Rp. 989.000
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

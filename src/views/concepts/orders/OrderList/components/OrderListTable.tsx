@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import Tag from '@/components/ui/Tag'
+import { useEffect, useMemo } from 'react'
 import Tooltip from '@/components/ui/Tooltip'
 import DataTable from '@/components/shared/DataTable'
 import useOrderlist from '../hooks/useOrderlist'
@@ -7,37 +6,17 @@ import cloneDeep from 'lodash/cloneDeep'
 import { useNavigate } from 'react-router-dom'
 import { TbTrash, TbEye } from 'react-icons/tb'
 import dayjs from 'dayjs'
-import { NumericFormat } from 'react-number-format'
 import type { OnSortParam, ColumnDef } from '@/components/shared/DataTable'
-import type { Order } from '../types'
 import type { TableQueries } from '@/@types/common'
+import useSWR from 'swr'
+import { apiGetMeetingDebrief } from '@/services/DashboardService'
+import { AgreementResponse } from '../types'
 
-const orderStatusColor: Record<
-    number,
-    {
-        label: string
-        bgClass: string
-        textClass: string
-    }
-> = {
-    0: {
-        label: 'Paid',
-        bgClass: 'bg-success-subtle',
-        textClass: 'text-success',
-    },
-    1: {
-        label: 'Pending',
-        bgClass: 'bg-warning-subtle',
-        textClass: 'text-warning',
-    },
-    2: { label: 'Failed', bgClass: 'bg-error-subtle', textClass: 'text-error' },
-}
-
-const OrderColumn = ({ row }: { row: Order }) => {
+const OrderColumn = ({ row }: { row: AgreementResponse }) => {
     const navigate = useNavigate()
 
     const onView = () => {
-        navigate(`/concepts/orders/order-details/${row.id}`)
+        navigate(`/concepts/meeting-debrief-edit/${row.id}`)
     }
 
     return (
@@ -50,7 +29,7 @@ const OrderColumn = ({ row }: { row: Order }) => {
     )
 }
 
-const ActionColumn = ({ row }: { row: Order }) => {
+const ActionColumn = ({ row }: { row: AgreementResponse }) => {
     const navigate = useNavigate()
 
     const onDelete = () => {}
@@ -78,53 +57,41 @@ const ActionColumn = ({ row }: { row: Order }) => {
     )
 }
 
-const PaymentMethodImage = ({
-    paymentMehod,
-    className,
-}: {
-    paymentMehod: string
-    className: string
-}) => {
-    switch (paymentMehod) {
-        case 'visa':
-            return (
-                <img
-                    className={className}
-                    src="/img/others/img-8.png"
-                    alt={paymentMehod}
-                />
-            )
-        case 'master':
-            return (
-                <img
-                    className={className}
-                    src="/img/others/img-9.png"
-                    alt={paymentMehod}
-                />
-            )
-        case 'paypal':
-            return (
-                <img
-                    className={className}
-                    src="/img/others/img-10.png"
-                    alt={paymentMehod}
-                />
-            )
-        default:
-            return <></>
-    }
-}
-
 const OrderListTable = () => {
-    const { orderList, orderListTotal, tableData, isLoading, setTableData } =
+    const { setOrderList, orderListTotal, tableData, setTableData } =
         useOrderlist()
-
-    const columns: ColumnDef<Order>[] = useMemo(
+    const { data, error, isLoading } = useSWR<AgreementResponse[]>(
+        ['/after'],
+        () => apiGetMeetingDebrief<AgreementResponse[]>(),
+        {
+            revalidateOnFocus: false,
+            revalidateIfStale: false,
+            revalidateOnReconnect: false,
+        },
+    )
+    useEffect(() => {
+        if (data) {
+            setOrderList(data)
+        }
+    }, [data, error, isLoading])
+    const columns: ColumnDef<AgreementResponse>[] = useMemo(
         () => [
             {
-                header: 'Order',
+                header: 'id',
                 accessorKey: 'id',
                 cell: (props) => <OrderColumn row={props.row.original} />,
+            },
+            {
+                header: 'Company Name',
+                accessorKey: 'customer',
+                cell: (props) => {
+                    const row = props.row.original
+                    return (
+                        <span className="font-semibold">
+                            {row.beforeMeeting?.name}
+                        </span>
+                    )
+                },
             },
             {
                 header: 'Date',
@@ -133,76 +100,50 @@ const OrderListTable = () => {
                     const row = props.row.original
                     return (
                         <span className="font-semibold">
-                            {dayjs.unix(row.date).format('DD/MM/YYYY')}
+                            {dayjs.unix(row.expiredDate).format('DD/MM/YYYY')}
                         </span>
                     )
                 },
             },
             {
-                header: 'Customer',
-                accessorKey: 'customer',
+                header: 'Head Count',
+                accessorKey: 'headCount',
                 cell: (props) => {
                     const row = props.row.original
-                    return <span className="font-semibold">{row.customer}</span>
-                },
-            },
-            {
-                header: 'Status',
-                accessorKey: 'status',
-                cell: (props) => {
-                    const { status } = props.row.original
                     return (
-                        <Tag className={orderStatusColor[status].bgClass}>
-                            <span
-                                className={`capitalize font-semibold ${orderStatusColor[status].textClass}`}
-                            >
-                                {orderStatusColor[status].label}
-                            </span>
-                        </Tag>
-                    )
-                },
-            },
-            {
-                header: 'Payment Method',
-                accessorKey: 'paymentMehod',
-                cell: (props) => {
-                    const { paymentMehod, paymentIdendifier } =
-                        props.row.original
-                    return (
-                        <span className="flex items-center gap-2">
-                            <PaymentMethodImage
-                                className="max-h-[20px]"
-                                paymentMehod={paymentMehod}
-                            />
-                            <span className="font-semibold">
-                                {paymentIdendifier}
-                            </span>
+                        <span className="font-semibold">
+                            {row.totalEmployee}
                         </span>
                     )
                 },
             },
             {
-                header: 'Total',
-                accessorKey: 'totalAmount',
+                header: 'Sentiment',
+                accessorKey: 'sentiment',
                 cell: (props) => {
-                    const { totalAmount } = props.row.original
+                    const row = props.row.original
                     return (
-                        <NumericFormat
-                            className="heading-text font-bold"
-                            displayType="text"
-                            value={(
-                                Math.round(totalAmount * 100) / 100
-                            ).toFixed(2)}
-                            prefix={'$'}
-                            thousandSeparator={true}
-                        />
+                        <span className="font-semibold">{row.sentiment}</span>
                     )
                 },
             },
             {
-                header: '',
-                id: 'action',
-                cell: (props) => <ActionColumn row={props.row.original} />,
+                header: 'MRR',
+                accessorKey: 'paymentMehod',
+                cell: (props) => {
+                    const mrrAmount = props.row.original.mrr
+                    const formatted = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0,
+                    }).format(mrrAmount)
+                    props.row.original
+                    return (
+                        <span className="flex items-center gap-2">
+                            <span className="font-semibold">{formatted}</span>
+                        </span>
+                    )
+                },
             },
         ],
         [],
@@ -234,8 +175,8 @@ const OrderListTable = () => {
     return (
         <DataTable
             columns={columns}
-            data={orderList}
-            noData={!isLoading && orderList.length === 0}
+            data={data as unknown[]}
+            noData={!isLoading && data.length === 0}
             skeletonAvatarColumns={[0]}
             skeletonAvatarProps={{ width: 28, height: 28 }}
             loading={isLoading}

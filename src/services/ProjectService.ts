@@ -65,6 +65,20 @@ export async function apiGetScrumBoards<T>() {
     })
 }
 
+export async function postScrumBoardsData<T>(payload: {
+    ticketId: number
+    sourceStage: string
+    destinationStage: string
+    newIndex: number
+}) {
+    console.log('the api got hit', payload)
+    return ApiService.fetchDataWithAxios<T>({
+        url: '/kanban',
+        method: 'patch',
+        data: payload,
+    })
+}
+
 export async function apiGetProjectMembers<T>() {
     return ApiService.fetchDataWithAxios<T>({
         url: '/projects/scrum-board/members',

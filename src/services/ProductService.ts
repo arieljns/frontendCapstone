@@ -1,8 +1,9 @@
 import ApiService from './ApiService'
 
-export async function apiGetProductList<T, U extends Record<string, unknown>>(
-    params: U,
-) {
+export async function apiGetMeetingDebriefDataWithId<
+    T,
+    U extends Record<string, unknown>,
+>(params: U) {
     return ApiService.fetchDataWithAxios<T>({
         url: '/products',
         method: 'get',

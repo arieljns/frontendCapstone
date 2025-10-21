@@ -14,6 +14,13 @@ export async function apiGetProjectDashboard<T>() {
     })
 }
 
+export async function apiGetMeetingDebrief<T>() {
+    return ApiService.fetchDataWithAxios<T>({
+        url: '/after',
+        method: 'GET',
+    })
+}
+
 export async function apiGetCustomerById<T, U extends { id: string }>(
     params: U,
 ) {

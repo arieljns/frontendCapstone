@@ -5,7 +5,7 @@ import type { GetOrdersResponse } from '../types'
 import type { TableQueries } from '@/@types/common'
 
 export default function useOrderList() {
-    const { tableData, filterData, setTableData, setFilterData } =
+    const { tableData, filterData, setTableData, setFilterData, setOrderList } =
         useOrderListStore((state) => state)
 
     const { data, error, isLoading, mutate } = useSWR(
@@ -32,5 +32,6 @@ export default function useOrderList() {
         mutate,
         setTableData,
         setFilterData,
+        setOrderList,
     }
 }

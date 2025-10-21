@@ -50,7 +50,7 @@ export const StatisticCard = ({
 const ProjectOverview = () => {
     return (
         <Card>
-            <div className="flex items-center  justify-between">
+            <div className="flex items-center  justify-between ">
                 <h4>Meeting Overview</h4>
                 <Link to="/concepts/projects/project-list">
                     <Button asElement="div" size="sm">

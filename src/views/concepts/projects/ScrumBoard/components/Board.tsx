@@ -11,6 +11,7 @@ import reoderArray from '@/utils/reoderArray'
 import {
     apiGetScrumBoards,
     apiGetProjectMembers,
+    postScrumBoardsData,
 } from '@/services/ProjectService'
 import {
     Droppable,
@@ -24,7 +25,6 @@ import type {
     Ticket,
 } from '../types'
 import type { DropResult } from '@hello-pangea/dnd'
-import { columnsContent, columnTitle } from '../boardColumn.constants'
 
 export type BoardProps = {
     containerHeight?: boolean
@@ -94,7 +94,7 @@ const Board = (props: BoardProps) => {
         resetView()
     }
 
-    const onDragEnd = (result: DropResult) => {
+    const onDragEnd = async (result: DropResult) => {
         if (result.combine) {
             if (result.type === 'COLUMN') {
                 const shallow = [...ordered]
@@ -144,12 +144,24 @@ const Board = (props: BoardProps) => {
             destination,
         })
 
+        try {
+            await postScrumBoardsData({
+                ticketId: parseInt(result.draggableId),
+                sourceStage: result.source.droppableId,
+                destinationStage: result.destination.droppableId,
+                newIndex: destination.index,
+            })
+        } catch (error) {
+            console.error(error)
+            updateColumns(columns)
+        }
+
         updateColumns(data.quoteMap)
     }
 
-    // useEffect(() => {
-    //     console.log('this is columns ', columns)
-    // }, [columns])
+    useEffect(() => {
+        console.log('this is columns ', columns)
+    }, [columns])
 
     return (
         <>

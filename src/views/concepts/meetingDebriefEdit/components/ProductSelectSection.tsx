@@ -50,7 +50,7 @@ type promoOption = {
     value: string
 }
 
-const ProductSelectSection = ({
+const ProductSelectSectionEdit = ({
     control,
     productList,
     productOption,
@@ -409,4 +409,4 @@ const ProductSelectSection = ({
     )
 }
 
-export default ProductSelectSection
+export default ProductSelectSectionEdit
