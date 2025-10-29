@@ -15,8 +15,8 @@ import { listOfProducts } from '@/constants/products.constant'
 import ProductSelectSectionEdit from './components/ProductSelectSection'
 import FollowupSectionEdit from './components/FollowupSection'
 import { useParams } from 'react-router-dom'
-import { useOrderListStore } from '../orders/OrderList/store/orderListStore'
-import useOrderList from '../orders/OrderList/hooks/useOrderlist'
+import useSWR from 'swr'
+import { apiGetCuratedRecord } from '@/services/OrderService'
 
 type OrderFormProps = {
     children: ReactNode
@@ -64,16 +64,22 @@ const MeetingDebriefFormEdit = (props: OrderFormProps) => {
     const { onFormSubmit, children, defaultValues, defaultProducts } = props
     const params = useParams()
 
-    const orderList = useOrderListStore((s) => s.orderList)
-
-    const orderListFormData = orderList.filter((data) => {
-        return data.id === parseInt(params.id)
-    })
-
-    console.log(
-        'this is the curated list of orderlist data:',
-        orderListFormData,
+    const { data, error, isLoading } = useSWR(
+        ['/after/user'],
+        () => apiGetCuratedRecord(),
+        {
+            onError: (err) => {
+                console.error('SWR fetch failed:', err)
+            },
+            revalidateOnFocus: false,
+            revalidateIfStale: false,
+            revalidateOnReconnect: false,
+        },
     )
+
+    if (error) {
+        return <div>Could not fetch after-meeting data</div>
+    }
 
     const { setSelectedProduct } = useOrderFormStore()
 
@@ -122,9 +128,7 @@ const MeetingDebriefFormEdit = (props: OrderFormProps) => {
         control,
     } = useForm<OrderFormSchema>({
         resolver: zodResolver(baseValidationSchema),
-        defaultValues: {
-            ...defaultValues,
-        },
+        defaultValues,
     })
 
     const productOption = listOfProducts.map((product) => ({
@@ -133,18 +137,18 @@ const MeetingDebriefFormEdit = (props: OrderFormProps) => {
         img: product.img,
     }))
 
-    const products = watch('products')
-
-    const formValues = watch()
-
     useEffect(() => {
-        console.log('Form Values', formValues)
-    }, [formValues])
+        if (!Array.isArray(data)) return
+        const targetId = Number(params.id) || null
+        const curatedData = data.find((item) => item.id === targetId)
+        if (!curatedData) return
+        reset({ ...curatedData })
+    }, [data, reset])
 
+    const watchedValue = watch()
     useEffect(() => {
-        console.log('Products watched:', products)
-    }, [products])
-
+        console.log('watch value:', watchedValue)
+    }, [watchedValue])
     return (
         <div className="flex">
             <Form

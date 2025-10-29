@@ -2,8 +2,8 @@ export const sentiment_labels = [
     { value: 'positive', label: 'Positive' },
     { value: 'neutral', label: 'Neutral' },
     { value: 'negative', label: 'Negative' },
-    { value: 'mix', label: 'mix' },
-]
+    { value: 'mix', label: 'Mix' },
+];
 
 export const excitement_levels = [
     { value: 'Very Low', label: 'Very Low' },
@@ -11,7 +11,7 @@ export const excitement_levels = [
     { value: 'Medium', label: 'Medium' },
     { value: 'High', label: 'High' },
     { value: 'Very High', label: 'Very High' },
-]
+];
 
 export const status = [
     { value: 'new', label: 'New' },
@@ -19,4 +19,4 @@ export const status = [
     { value: 'completed', label: 'Completed' },
     { value: 'on_hold', label: 'On Hold' },
     { value: 'cancelled', label: 'Cancelled' },
-]
+];

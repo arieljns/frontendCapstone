@@ -10,6 +10,13 @@ export async function apiGetOrderList<T, U extends Record<string, unknown>>(
     })
 }
 
+export async function apiGetCuratedRecord<T>() {
+    return ApiService.fetchDataWithAxios<T>({
+        url: '/after/user/data',
+        method: 'get',
+    })
+}
+
 export async function apiPostMeetingDebrief<
     T,
     U extends Record<string, unknown>,

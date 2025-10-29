@@ -61,19 +61,22 @@ const CustomerDetailSectionEdit = ({
                     <Controller
                         name="excitementLevel"
                         control={control}
-                        render={({ field }) => (
-                            <Select<SentimentOption>
-                                options={excitement_levels}
-                                {...field}
-                                placeholder="Excitement Level"
-                                value={excitement_levels.filter(
-                                    (option) => option.value === field.value,
-                                )}
-                                onChange={(option) =>
-                                    field.onChange(option?.value)
-                                }
-                            />
-                        )}
+                        render={({ field }) => {
+                            console.log('this is field value', field.value)
+                            return (
+                                <Select<SentimentOption>
+                                    options={excitement_levels}
+                                    placeholder="Excitement Level"
+                                    value={excitement_levels.find(
+                                        (option) =>
+                                            option.value === field.value,
+                                    )}
+                                    onChange={(option) =>
+                                        field.onChange(option?.value)
+                                    }
+                                />
+                            )
+                        }}
                     />
                 </FormItem>
                 <FormItem
@@ -89,7 +92,7 @@ const CustomerDetailSectionEdit = ({
                                 options={status}
                                 {...field}
                                 placeholder="Excitement Level"
-                                value={status.filter(
+                                value={status.find(
                                     (option) => option.value === field.value,
                                 )}
                                 onChange={(option) =>

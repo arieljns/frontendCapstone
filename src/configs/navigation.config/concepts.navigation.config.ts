@@ -419,7 +419,7 @@ const conceptsNavigationConfig: NavigationTree[] = [
                 translateKey: 'nav.meeting.debrief.edit',
                 icon: 'customers',
                 type: NAV_ITEM_TYPE_COLLAPSE,
-                authority: [ USER],
+                authority: [USER],
                 meta: {
                     description: {
                         translateKey: 'nav.conceptsCustomers.customersDesc',

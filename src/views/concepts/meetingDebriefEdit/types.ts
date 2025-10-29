@@ -51,29 +51,6 @@ export type Revenue = {
     mrr: number
 }
 
-export type PaymentType = 'creditOrDebitCard' | 'bankTransfer' | ''
-
-export type GetPaymentMethodFields<T extends PaymentType> =
-    T extends 'creditOrDebitCard'
-        ? {
-              cardHolderName: string
-              ccNumber: string
-              cardExpiry: string
-              code: string
-          }
-        : T extends 'bankTransfer'
-          ? {
-                accountHolderName: string
-                bankName: string
-                accountNumber: string
-            }
-          : // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-            {}
-
-export interface PaymentMethodFields {
-    paymentMethod: PaymentType
-}
-
 type BaseOrderFormSchema = CustomerDetailsFields &
     BillingAddressFields &
     ParamField &
