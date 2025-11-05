@@ -1,196 +1,145 @@
-import { useState, useEffect, useRef } from 'react'
 import Card from '@/components/ui/Card'
-import Select from '@/components/ui/Select'
-import GrowShrinkValue from '@/components/shared/GrowShrinkValue'
-import AbbreviateNumber from '@/components/shared/AbbreviateNumber'
 import Chart from '@/components/shared/Chart'
-import { useThemeStore } from '@/store/themeStore'
-import classNames from '@/utils/classNames'
-import { COLOR_1, COLOR_2, COLOR_4 } from '@/constants/chart.constant'
-import { options } from '../constants'
 import { NumericFormat } from 'react-number-format'
-import { TbCoin, TbShoppingBagCheck, TbEye } from 'react-icons/tb'
-import type { ReactNode } from 'react'
-import type { StatisticData, Period, StatisticCategory } from '../types'
+import type { RevenueChartData } from '../types'
 
-type StatisticCardProps = {
-    title: string
-    value: number | ReactNode
-    icon: ReactNode
-    growShrink: number
-    iconClass: string
-    label: StatisticCategory
-    compareFrom: string
-    active: boolean
-    onClick: (label: StatisticCategory) => void
+type TotalRevenueChartProps = {
+    data: RevenueChartData
 }
 
-type StatisticGroupsProps = {
-    data: StatisticData
-}
+const TotalRevenueChart = ({ data }: TotalRevenueChartProps) => {
+    const latestRevenue =
+        data.revenue.length > 0 ? data.revenue[data.revenue.length - 1] : 0
+    const previousRevenue =
+        data.revenue.length > 1 ? data.revenue[data.revenue.length - 2] : 0
+    const revenueDelta =
+        previousRevenue === 0
+            ? 0
+            : ((latestRevenue - previousRevenue) / previousRevenue) * 100
 
-const chartColors: Record<StatisticCategory, string> = {
-    totalProfit: COLOR_1,
-    totalOrder: COLOR_2,
-    totalImpression: COLOR_4,
-}
-
-const StatisticCard = (props: StatisticCardProps) => {
-    const {
-        title,
-        value,
-        label,
-        icon,
-        growShrink,
-        iconClass,
-        active,
-        compareFrom,
-        onClick,
-    } = props
+    const totalYearToDate = data.revenue.reduce(
+        (aggregate, value) => aggregate + value,
+        0,
+    )
 
     return (
-        <button
-            className={classNames(
-                'p-4 rounded-2xl cursor-pointer ltr:text-left rtl:text-right transition duration-150 outline-none',
-                active && 'bg-white dark:bg-gray-900 shadow-md',
-            )}
-            onClick={() => onClick(label)}
+        <Card
+            header={{
+                content: (
+                    <div>
+                        <span className="text-sm uppercase text-gray-500 dark:text-gray-400">
+                            Total Revenue
+                        </span>
+                        <h4 className="mt-1">Revenue Performance</h4>
+                    </div>
+                ),
+            }}
         >
-            <div className="flex md:flex-col-reverse gap-2 2xl:flex-row justify-between relative">
-                <div>
-                    <div className="mb-4 text-sm font-semibold">{title}</div>
-                    <h3 className="mb-1">{value}</h3>
-                    <div className="inline-flex items-center flex-wrap gap-1">
-                        <GrowShrinkValue
-                            className="font-bold"
-                            value={growShrink}
-                            suffix="%"
-                            positiveIcon="+"
-                            negativeIcon=""
-                        />
-                        <span>{compareFrom}</span>
+            <div className="grid gap-4 md:grid-cols-3 mt-2">
+                <div className="md:col-span-2">
+                    <Chart
+                        type="area"
+                        height={320}
+                        series={[
+                            { name: 'Actual', data: data.revenue },
+                            { name: 'Forecast', data: data.forecast },
+                        ]}
+                        xAxis={data.categories}
+                        customOptions={{
+                            stroke: { curve: 'smooth', width: 3 },
+                            dataLabels: { enabled: false },
+                            colors: ['#2563eb', '#38bdf8'],
+                            fill: {
+                                type: 'gradient',
+                                gradient: {
+                                    shade: 'light',
+                                    type: 'vertical',
+                                    opacityFrom: 0.45,
+                                    opacityTo: 0.05,
+                                    stops: [0, 90, 100],
+                                },
+                            },
+                            yaxis: {
+                                labels: {
+                                    formatter: (value: number) =>
+                                        `Rp${Math.round(value / 1000)}k`,
+                                },
+                            },
+                            legend: {
+                                show: true,
+                                position: 'top',
+                                horizontalAlign: 'left',
+                            },
+                            tooltip: {
+                                y: {
+                                    formatter: (value: number) =>
+                                        `Rp${value.toLocaleString('id-ID')}`,
+                                },
+                            },
+                        }}
+                    />
+                </div>
+                <div className="flex flex-col gap-4 justify-center border border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-4">
+                    <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Current Period
+                        </span>
+                        <div className="text-2xl font-semibold">
+                            <NumericFormat
+                                displayType="text"
+                                value={latestRevenue}
+                                prefix="Rp"
+                                thousandSeparator
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Forecast
+                        </span>
+                        <div className="text-xl font-medium text-emerald-500">
+                            <NumericFormat
+                                displayType="text"
+                                value={
+                                    data.forecast[data.forecast.length - 1] ?? 0
+                                }
+                                prefix="Rp"
+                                thousandSeparator
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Change vs. Prior Period
+                        </span>
+                    <div
+                        className={`text-lg font-medium ${
+                            revenueDelta >= 0
+                                ? 'text-emerald-500'
+                                : 'text-rose-500'
+                        }`}
+                    >
+                        {revenueDelta >= 0 ? '+' : '-'}{' '}
+                        {Math.abs(revenueDelta).toFixed(1)}%
+                    </div>
+                    </div>
+                    <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Year-to-Date Actual
+                        </span>
+                        <div className="text-lg">
+                            <NumericFormat
+                                displayType="text"
+                                value={totalYearToDate}
+                                prefix="Rp"
+                                thousandSeparator
+                            />
+                        </div>
                     </div>
                 </div>
-                <div
-                    className={classNames(
-                        'flex items-center justify-center min-h-12 min-w-12 max-h-12 max-w-12 text-gray-900 rounded-full text-2xl',
-                        iconClass,
-                    )}
-                >
-                    {icon}
-                </div>
             </div>
-        </button>
-    )
-}
-
-const Overview = ({ data }: StatisticGroupsProps) => {
-    const [selectedCategory, setSelectedCategory] =
-        useState<StatisticCategory>('totalProfit')
-
-    const [selectedPeriod, setSelectedPeriod] = useState<Period>('thisMonth')
-
-    const sideNavCollapse = useThemeStore(
-        (state) => state.layout.sideNavCollapse,
-    )
-
-    const isFirstRender = useRef(true)
-
-    useEffect(() => {
-        if (!sideNavCollapse && isFirstRender.current) {
-            isFirstRender.current = false
-            return
-        }
-
-        if (!isFirstRender.current) {
-            window.dispatchEvent(new Event('resize'))
-        }
-    }, [sideNavCollapse])
-
-    return (
-        <Card>
-            <div className="flex items-center justify-between">
-                <h4>Overview</h4>
-                <Select
-                    className="w-[120px]"
-                    size="sm"
-                    placeholder="Select period"
-                    value={options.filter(
-                        (option) => option.value === selectedPeriod,
-                    )}
-                    options={options}
-                    isSearchable={false}
-                    onChange={(option) => {
-                        if (option?.value) {
-                            setSelectedPeriod(option?.value)
-                        }
-                    }}
-                />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-2xl p-3 bg-gray-100 dark:bg-gray-700 mt-4">
-                <StatisticCard
-                    title="Revenue"
-                    value={
-                        <NumericFormat
-                            displayType="text"
-                            value={data.totalProfit[selectedPeriod].value}
-                            prefix={'$'}
-                            thousandSeparator={true}
-                        />
-                    }
-                    growShrink={data.totalProfit[selectedPeriod].growShrink}
-                    iconClass="bg-sky-200"
-                    icon={<TbCoin />}
-                    label="totalProfit"
-                    active={selectedCategory === 'totalProfit'}
-                    compareFrom={data.totalProfit[selectedPeriod].comparePeriod}
-                    onClick={setSelectedCategory}
-                />
-                <StatisticCard
-                    title="Total Meeting"
-                    value={
-                        <NumericFormat
-                            displayType="text"
-                            value={data.totalOrder[selectedPeriod].value}
-                            thousandSeparator={true}
-                        />
-                    }
-                    growShrink={data.totalOrder[selectedPeriod].growShrink}
-                    iconClass="bg-emerald-200"
-                    icon={<TbShoppingBagCheck />}
-                    label="totalOrder"
-                    active={selectedCategory === 'totalOrder'}
-                    compareFrom={data.totalProfit[selectedPeriod].comparePeriod}
-                    onClick={setSelectedCategory}
-                />
-                <StatisticCard
-                    title="SDR"
-                    value={
-                        <AbbreviateNumber
-                            value={data.totalImpression[selectedPeriod].value}
-                        />
-                    }
-                    growShrink={data.totalImpression[selectedPeriod].growShrink}
-                    iconClass="bg-purple-200"
-                    icon={<TbEye />}
-                    label="totalImpression"
-                    active={selectedCategory === 'totalImpression'}
-                    compareFrom={data.totalProfit[selectedPeriod].comparePeriod}
-                    onClick={setSelectedCategory}
-                />
-            </div>
-            <Chart
-                type="line"
-                series={data[selectedCategory][selectedPeriod].chartData.series}
-                xAxis={data[selectedCategory][selectedPeriod].chartData.date}
-                height="410px"
-                customOptions={{
-                    legend: { show: true },
-                    colors: [chartColors[selectedCategory]],
-                }}
-            />
         </Card>
     )
 }
 
-export default Overview
+export default TotalRevenueChart

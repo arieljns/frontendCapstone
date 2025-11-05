@@ -1,6 +1,7 @@
 import { create } from 'zustand'
+import type { KeyedMutator } from 'swr'
 import type { TableQueries } from '@/@types/common'
-import type { Customer, Filter } from '../types'
+import type { Filter, MemberMetric } from '../types'
 
 export const initialTableData: TableQueries = {
     pageIndex: 1,
@@ -26,20 +27,26 @@ export const initialFilterData = {
 export type CustomersListState = {
     tableData: TableQueries
     filterData: Filter
-    selectedCustomer: Partial<Customer>[]
+    customerList: MemberMetric[]
+    selectedCustomer: Partial<MemberMetric>[]
+    mutate: KeyedMutator<unknown> | null
 }
 
 type CustomersListAction = {
     setFilterData: (payload: Filter) => void
     setTableData: (payload: TableQueries) => void
-    setSelectedCustomer: (checked: boolean, customer: Customer) => void
-    setSelectAllCustomer: (customer: Customer[]) => void
+    setCustomerList: (payload: MemberMetric[]) => void
+    setSelectedCustomer: (checked: boolean, customer: MemberMetric) => void
+    setSelectAllCustomer: (customer: MemberMetric[]) => void
+    setMutate: (mutate: KeyedMutator<unknown> | null) => void
 }
 
 const initialState: CustomersListState = {
     tableData: initialTableData,
     filterData: initialFilterData,
+    customerList: [],
     selectedCustomer: [],
+    mutate: null,
 }
 
 export const useCustomerListStore = create<
@@ -48,6 +55,7 @@ export const useCustomerListStore = create<
     ...initialState,
     setFilterData: (payload) => set(() => ({ filterData: payload })),
     setTableData: (payload) => set(() => ({ tableData: payload })),
+    setCustomerList: (payload) => set(() => ({ customerList: payload })),
     setSelectedCustomer: (checked, row) =>
         set((state) => {
             const prevData = state.selectedCustomer
@@ -55,11 +63,14 @@ export const useCustomerListStore = create<
                 return { selectedCustomer: [...prevData, ...[row]] }
             } else {
                 if (
-                    prevData.some((prevCustomer) => row.id === prevCustomer.id)
+                    prevData.some(
+                        (prevCustomer) => row.userId === prevCustomer.userId,
+                    )
                 ) {
                     return {
                         selectedCustomer: prevData.filter(
-                            (prevCustomer) => prevCustomer.id !== row.id,
+                            (prevCustomer) =>
+                                prevCustomer.userId !== row.userId,
                         ),
                     }
                 }
@@ -67,4 +78,5 @@ export const useCustomerListStore = create<
             }
         }),
     setSelectAllCustomer: (row) => set(() => ({ selectedCustomer: row })),
+    setMutate: (mutate) => set(() => ({ mutate })),
 }))

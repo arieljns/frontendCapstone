@@ -1,78 +1,62 @@
-export type Period = 'thisMonth' | 'thisWeek' | 'thisYear'
-
-export type StatisticCategory = 'totalProfit' | 'totalOrder' | 'totalImpression'
-
-export type ChannelRevenue = Record<
-    Period,
-    {
-        value: number
-        growShrink: number
-        percentage: {
-            onlineStore: number
-            physicalStore: number
-            socialMedia: number
-        }
-    }
->
-
-export type SalesTargetData = Record<
-    Period,
-    {
-        target: number
-        achieved: number
-        percentage: number
-    }
->
-
-export type Product = {
-    id: string
-    name: string
-    productCode: string
-    img: string
-    sales: number
-    growShrink: number
+export type RevenueChartData = {
+    categories: string[]
+    revenue: number[]
+    forecast: number[]
 }
 
-export type CustomerDemographicData = {
-    id: string
-    name: string
-    value: number
-    coordinates: [number, number]
+export type MeetingChartData = {
+    categories: string[]
+    totalMeetings: number[]
+    upcomingMeetings: number[]
 }
 
-export type PeriodData = {
-    value: number
-    growShrink: number
-    comparePeriod: string
-    chartData: {
-        series: {
-            name: string
-            data: number[]
-        }[]
-        date: string[]
-    }
+export type SalesFunnelKanbanStage = {
+    stage: string
+    funnel: number
+    kanban: number
 }
 
-export type StatisticData = Record<
-    StatisticCategory,
-    Record<Period, PeriodData>
->
-
-export type Order = {
-    id: string
-    date: number
-    customer: string
-    status: number
-    paymentMehod: string
-    paymentIdendifier: string
-    totalAmount: number
+export type SalesTargetData = {
+    achieved: number
+    target: number
+    velocity: number[]
+    velocityPeriods: string[]
 }
 
-export type GetEcommerceDashboardResponse = {
-    statisticData: StatisticData
-    recentOrders: Order[]
+export type LeadsPerformanceData = {
+    owner: string
+    won: number
+    lost: number
+}
+
+export type PackageSelectionData = {
+    label: string
+    count: number
+}
+
+export type DealsClosedData = {
+    month: string
+    count: number
+}
+
+export type ConversionRateData = {
+    channel: string
+    percentage: number
+}
+
+export type MeetingSentimentData = {
+    sentiment: 'Positive' | 'Neutral' | 'Negative'
+    score: number
+}
+
+export type EcommerceDashboardData = {
+    revenue: RevenueChartData
+    meetings: MeetingChartData
+    salesFunnel: SalesFunnelKanbanStage[]
     salesTarget: SalesTargetData
-    topProduct: Product[]
-    customerDemographic: CustomerDemographicData[]
-    revenueByChannel: ChannelRevenue
+    leadsPerformance: LeadsPerformanceData[]
+    packages: PackageSelectionData[]
+    dealsClosed: DealsClosedData[]
+    conversion: ConversionRateData[]
+    meetingSentiment: MeetingSentimentData[]
 }

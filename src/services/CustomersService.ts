@@ -1,12 +1,23 @@
 import ApiService from './ApiService'
 
-export async function apiGetCustomersList<T, U extends Record<string, unknown>>(
-    params: U,
-) {
+export async function apiGetTeamMember<T>() {
     return ApiService.fetchDataWithAxios<T>({
-        url: '/customers',
+        url: 'analytics/team-metrics',
         method: 'get',
-        params,
+    })
+}
+
+export async function apiGetTeamMemberById<T>(userId: string) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: `analytics/team-metrics/${encodeURIComponent(userId)}`,
+        method: 'get',
+    })
+}
+
+export async function apiDeleteTeamMember<T>(id: string) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: `users/delete/${encodeURIComponent(id)}`,
+        method: 'DELETE',
     })
 }
 

@@ -1,46 +1,41 @@
-import Loading from '@/components/shared/Loading'
 import Overview from './components/Overview'
 import SalesTarget from './components/SalesTarget'
 import RevenueByChannel from './components/RevenueByChannel'
-import { apiGetEcommerceDashboard } from '@/services/DashboardService'
-import useSWR from 'swr'
-import type { GetEcommerceDashboardResponse } from './types'
-import AnalyticDashboard from '../AnalyticDashboard'
+import RecentOrder from './components/RecentOrder'
+import TopProduct from './components/TopProduct'
+import PackageSelectionChart from './components/PackageSelectionChart'
+import DealsClosedChart from './components/DealsClosedChart'
+import ConversionRateChart from './components/ConversionRateChart'
+import MeetingSentimentChart from './components/MeetingSentimentChart'
+import { ecommerceDashboardData } from './constants'
 
-const SalesDashboard = () => {
-    const { data, isLoading } = useSWR(
-        ['/api/dashboard/ecommerce'],
-        () => apiGetEcommerceDashboard<GetEcommerceDashboardResponse>(),
-        {
-            revalidateOnFocus: false,
-            revalidateIfStale: false,
-            revalidateOnReconnect: false,
-        },
-    )
+const EcommerceDashboard = () => {
+    const data = ecommerceDashboardData
 
     return (
-        <Loading loading={isLoading}>
-            {data && (
-                <div>
-                    <div className="flex flex-col gap-4 max-w-full overflow-x-hidden">
-                        <div className="flex flex-col xl:flex-row gap-4">
-                            <div className="flex flex-col gap-4 flex-1 xl:col-span-3">
-                                <Overview data={data.statisticData} />
-                            </div>
-                            <div className="flex flex-col gap-4 2xl:min-w-[360px]">
-                                <SalesTarget data={data.salesTarget} />
-                                <RevenueByChannel
-                                    data={data.revenueByChannel}
-                                />
-                            </div>
-                        </div>
-
-                        <AnalyticDashboard />
-                    </div>
+        <div className="flex flex-col gap-4 max-w-full overflow-x-hidden">
+            <div className="grid gap-4 xl:grid-cols-3">
+                <div className="xl:col-span-2">
+                    <Overview data={data.revenue} />
                 </div>
-            )}
-        </Loading>
+                <SalesTarget data={data.salesTarget} />
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+                <div className="xl:col-span-2">
+                    <RevenueByChannel data={data.meetings} />
+                </div>
+                <PackageSelectionChart data={data.packages} />
+                <MeetingSentimentChart data={data.meetingSentiment} />
+                <div className="xl:col-span-2">
+                    <RecentOrder data={data.salesFunnel} />
+                </div>
+                <ConversionRateChart data={data.conversion} />
+                <DealsClosedChart data={data.dealsClosed} />
+                <TopProduct data={data.leadsPerformance} />
+            </div>
+        </div>
     )
 }
 
-export default SalesDashboard
+export default EcommerceDashboard

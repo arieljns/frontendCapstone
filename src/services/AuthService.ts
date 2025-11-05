@@ -17,9 +17,18 @@ export async function apiSignIn(data: SignInCredential) {
     })
 }
 
+export async function apiCreateMember<T>(data: SignUpCredential) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: '/users/sign-up/member',
+        method: 'post',
+        data,
+    })
+}
+
 export async function apiSignUp(data: SignUpCredential) {
-    return ApiService.fetchDataWithAxios<SignUpResponse>({
-        url: endpointConfig.signUp,
+    console.log('this are the data from apiCreateMember:', data)
+    return ApiService.fetchDataWithAxios({
+        url: '/users/sign-up/member',
         method: 'post',
         data,
     })

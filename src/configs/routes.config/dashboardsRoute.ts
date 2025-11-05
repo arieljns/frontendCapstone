@@ -52,6 +52,15 @@ const dashboardsRoute: Routes = [
         },
     },
     {
+        key: 'concepts.projects.scrumBoard',
+        path: `${DASHBOARDS_PREFIX_PATH}/projects/scrum-board`,
+        component: lazy(() => import('@/views/concepts/projects/ScrumBoard')),
+        authority: [USER],
+        meta: {
+            pageContainerType: 'contained',
+        },
+    },
+    {
         key: 'dashboard.admin',
         path: `${DASHBOARDS_PREFIX_PATH}/admin/analytics`,
         component: lazy(() => import('@/views/dashboards/AdminDashboard')),

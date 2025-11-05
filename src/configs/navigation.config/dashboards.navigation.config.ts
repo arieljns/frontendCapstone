@@ -114,7 +114,7 @@ const dashboardsNavigationConfig: NavigationTree[] = [
             },
             {
                 key: 'concepts.projects.kanban.board',
-                path: `${CONCEPTS_PREFIX_PATH}/projects/scrum-board`,
+                path: `${DASHBOARDS_PREFIX_PATH}/projects/scrum-board`,
                 title: 'Kanban Board',
                 translateKey: 'nav.conceptsProjects.scrumBoard',
                 icon: 'projectScrumBoard',

@@ -139,6 +139,23 @@ const conceptsNavigationConfig: NavigationTree[] = [
                         subMenu: [],
                     },
                     {
+                        key: 'concepts.members',
+                        path: `${CONCEPTS_PREFIX_PATH}/member/detail/:id`,
+                        title: 'Details',
+                        translateKey: 'nav.concepts.memberDetials',
+                        icon: 'memberDetails',
+                        type: NAV_ITEM_TYPE_ITEM,
+                        authority: [ADMIN],
+                        meta: {
+                            description: {
+                                translateKey:
+                                    'nav.conceptsProjects.projectDetailsDesc',
+                                label: 'Project detailed information',
+                            },
+                        },
+                        subMenu: [],
+                    },
+                    {
                         key: 'concepts.projects.projectTasks',
                         path: `${CONCEPTS_PREFIX_PATH}/projects/tasks`,
                         title: 'Tasks',

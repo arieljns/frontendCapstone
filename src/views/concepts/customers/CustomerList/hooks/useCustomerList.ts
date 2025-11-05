@@ -1,10 +1,26 @@
-import { apiGetCustomersList } from '@/services/CustomersService'
-import useSWR from 'swr'
 import { useCustomerListStore } from '../store/customerListStore'
-import type { GetCustomersListResponse } from '../types'
+import type { Filter, MemberMetric } from '../types'
 import type { TableQueries } from '@/@types/common'
+import type { KeyedMutator } from 'swr'
 
-export default function useCustomerList() {
+type CustomerListMutate = KeyedMutator<unknown>
+
+type UseCustomerListReturn = {
+    customerList: MemberMetric[]
+    customerListTotal: number
+    tableData: TableQueries
+    filterData: Filter
+    mutate: CustomerListMutate | null
+    setMutate: (mutate: CustomerListMutate | null) => void
+    setTableData: (payload: TableQueries) => void
+    selectedCustomer: Partial<MemberMetric>[]
+    setSelectedCustomer: (checked: boolean, customer: MemberMetric) => void
+    setSelectAllCustomer: (customer: MemberMetric[]) => void
+    setFilterData: (payload: Filter) => void
+    setCustomerList: (payload: MemberMetric[]) => void
+}
+
+export default function useCustomerList(): UseCustomerListReturn {
     const {
         tableData,
         filterData,
@@ -13,34 +29,26 @@ export default function useCustomerList() {
         setSelectedCustomer,
         setSelectAllCustomer,
         setFilterData,
+        customerList,
+        setCustomerList,
+        mutate,
+        setMutate,
     } = useCustomerListStore((state) => state)
 
-    const { data, error, isLoading, mutate } = useSWR(
-        ['/api/customers', { ...tableData, ...filterData }],
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, params]) =>
-            apiGetCustomersList<GetCustomersListResponse, TableQueries>(params),
-        {
-            revalidateOnFocus: false,
-        },
-    )
-
-    const customerList = data?.list || []
-
-    const customerListTotal = data?.total || 0
+    const customerListTotal = customerList.length
 
     return {
         customerList,
         customerListTotal,
-        error,
-        isLoading,
         tableData,
         filterData,
         mutate,
+        setMutate,
         setTableData,
         selectedCustomer,
         setSelectedCustomer,
         setSelectAllCustomer,
         setFilterData,
+        setCustomerList,
     }
 }

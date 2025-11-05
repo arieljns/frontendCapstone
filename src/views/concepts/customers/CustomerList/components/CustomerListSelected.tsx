@@ -16,7 +16,7 @@ const CustomerListSelected = () => {
         selectedCustomer,
         customerList,
         mutate,
-        customerListTotal,
+        setCustomerList,
         setSelectAllCustomer,
     } = useCustomerList()
 
@@ -35,17 +35,12 @@ const CustomerListSelected = () => {
     const handleConfirmDelete = () => {
         const newCustomerList = customerList.filter((customer) => {
             return !selectedCustomer.some(
-                (selected) => selected.id === customer.id,
+                (selected) => selected.userId === customer.userId,
             )
         })
         setSelectAllCustomer([])
-        mutate(
-            {
-                list: newCustomerList,
-                total: customerListTotal - selectedCustomer.length,
-            },
-            false,
-        )
+        setCustomerList(newCustomerList)
+        mutate?.()
         setDeleteConfirmationOpen(false)
     }
 
@@ -145,8 +140,15 @@ const CustomerListSelected = () => {
                     omittedAvatarProps={{ size: 30 }}
                 >
                     {selectedCustomer.map((customer) => (
-                        <Tooltip key={customer.id} title={customer.name}>
-                            <Avatar size={30} src={customer.img} alt="" />
+                        <Tooltip
+                            key={customer.userId ?? customer.name}
+                            title={customer.name}
+                        >
+                            <Avatar size={30}>
+                                {customer.initials ||
+                                    customer.name?.charAt(0)?.toUpperCase() ||
+                                    '?'}
+                            </Avatar>
                         </Tooltip>
                     ))}
                 </Avatar.Group>

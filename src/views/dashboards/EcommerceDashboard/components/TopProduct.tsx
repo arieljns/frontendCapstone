@@ -1,68 +1,78 @@
-import Avatar from '@/components/ui/Avatar'
-import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
-import GrowShrinkValue from '@/components/shared/GrowShrinkValue'
-import classNames from '@/utils/classNames'
-import isLastChild from '@/utils/isLastChild'
-import { useNavigate } from 'react-router-dom'
-import type { Product } from '../types'
+import Chart from '@/components/shared/Chart'
+import type { LeadsPerformanceData } from '../types'
 
-type TopProductProps = {
-    data: Product[]
+type LeadsPerformanceProps = {
+    data: LeadsPerformanceData[]
 }
 
-const TopProduct = ({ data }: TopProductProps) => {
-    const navigate = useNavigate()
+const TopProduct = ({ data }: LeadsPerformanceProps) => {
+    const owners = data.map((item) => item.owner)
+    const wonSeries = data.map((item) => item.won)
+    const lostSeries = data.map((item) => item.lost)
 
-    const handleViewAll = () => {
-        navigate('/concepts/products/product-list')
-    }
+    const topCloser = data.reduce(
+        (best, current) =>
+            current.won > best.won ? current : best,
+        data[0] ?? { owner: 'N/A', won: 0, lost: 0 },
+    )
 
     return (
-        <Card>
-            <div className="flex items-center justify-between">
-                <h4>Top product</h4>
-                <Button size="sm" onClick={handleViewAll}>
-                    View all
-                </Button>
-            </div>
-            <div className="mt-5">
-                {data.map((product, index) => (
-                    <div
-                        key={product.id}
-                        className={classNames(
-                            'flex items-center justify-between py-2 dark:border-gray-600',
-                            !isLastChild(data, index) && 'mb-2',
-                        )}
-                    >
-                        <div className="flex items-center gap-2">
-                            <Avatar
-                                className="bg-white"
-                                size={50}
-                                src={product.img}
-                                shape="round"
-                            />
-                            <div>
-                                <div className="heading-text font-bold">
-                                    {product.name}
-                                </div>
-                                <div>Sold: {product.sales}</div>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <GrowShrinkValue
-                                className="rounded-lg py-0.5 px-2 font-bold"
-                                value={product.growShrink}
-                                positiveClass="bg-success-subtle"
-                                negativeClass="bg-error-subtle"
-                                suffix="%"
-                                positiveIcon="+"
-                                negativeIcon=""
-                            />
-                        </div>
+        <Card
+            header={{
+                content: (
+                    <div>
+                        <span className="text-sm uppercase text-gray-500 dark:text-gray-400">
+                            Team Performance
+                        </span>
+                        <h4 className="mt-1">Leads Performance</h4>
                     </div>
-                ))}
+                ),
+            }}
+        >
+            <div className="mb-4 rounded-2xl bg-indigo-50 p-4 text-sm dark:bg-indigo-500/10">
+                <span className="text-gray-600 dark:text-indigo-200">
+                    Top closer this period:{' '}
+                    <span className="font-semibold text-indigo-600 dark:text-indigo-100">
+                        {topCloser.owner}
+                    </span>{' '}
+                    ({topCloser.won} wins)
+                </span>
             </div>
+            <Chart
+                type="bar"
+                height={300}
+                series={[
+                    { name: 'Won', data: wonSeries },
+                    { name: 'Lost', data: lostSeries },
+                ]}
+                xAxis={owners}
+                customOptions={{
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 6,
+                            columnWidth: '50%',
+                        },
+                    },
+                    colors: ['#22c55e', '#f97316'],
+                    dataLabels: {
+                        enabled: true,
+                        formatter: (value: number) => value.toString(),
+                    },
+                    legend: {
+                        position: 'top',
+                        horizontalAlign: 'left',
+                    },
+                    tooltip: {
+                        shared: true,
+                        intersect: false,
+                        y: {
+                            formatter: (value: number) =>
+                                `${value} leads`,
+                        },
+                    },
+                }}
+            />
         </Card>
     )
 }

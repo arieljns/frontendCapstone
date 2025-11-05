@@ -66,6 +66,20 @@ export type Customer = {
     totalSpending: number
 }
 
+export type MemberMetric = {
+    userUuid?: string
+    userId: string
+    email: string
+    name: string
+    leadCount: number
+    totalDeals: number
+    closedWon: number
+    totalRevenue: number
+    totalMrr: number
+    conversionRate: number
+    initials: string
+}
+
 
 export type Meeting = {
     id: string

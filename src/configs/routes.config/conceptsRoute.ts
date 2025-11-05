@@ -1,5 +1,8 @@
 import { lazy } from 'react'
-import { CONCEPTS_PREFIX_PATH } from '@/constants/route.constant'
+import {
+    CONCEPTS_PREFIX_PATH,
+    DASHBOARDS_PREFIX_PATH,
+} from '@/constants/route.constant'
 import { ADMIN, USER } from '@/constants/roles.constant'
 import type { Routes } from '@/@types/routes'
 
@@ -17,19 +20,9 @@ const conceptsRoute: Routes = [
         key: 'concepts.quotation',
         path: `${CONCEPTS_PREFIX_PATH}/quotation/:id`,
         component: lazy(() => import('@/views/concepts/quotations/Quotation')),
-        authority: [ADMIN, USER],
+        authority: [USER],
         meta: {
             pageContainerType: 'contained',
-        },
-    },
-    {
-        key: 'concepts.ai.image',
-        path: `${CONCEPTS_PREFIX_PATH}/ai/image`,
-        component: lazy(() => import('@/views/concepts/ai/Image')),
-        authority: [ADMIN, USER],
-        meta: {
-            pageContainerType: 'contained',
-            pageBackgroundType: 'plain',
         },
     },
     {
@@ -40,6 +33,7 @@ const conceptsRoute: Routes = [
         ),
         authority: [ADMIN],
     },
+
     {
         key: 'concepts.meetingDebriefEdit',
         path: `${CONCEPTS_PREFIX_PATH}/meeting-debrief-edit/:id`,
@@ -131,20 +125,37 @@ const conceptsRoute: Routes = [
             footer: false,
         },
     },
-    {
-        key: 'concepts.projects.scrumBoard',
-        path: `${CONCEPTS_PREFIX_PATH}/projects/scrum-board`,
-        component: lazy(() => import('@/views/concepts/projects/ScrumBoard')),
-        authority: [ADMIN, USER],
-        meta: {
-            pageContainerType: 'contained',
-        },
-    },
+
     {
         key: 'concepts.projects.projectList',
         path: `${CONCEPTS_PREFIX_PATH}/projects/project-list`,
         component: lazy(() => import('@/views/concepts/projects/ProjectList')),
         authority: [ADMIN, USER],
+        meta: {
+            pageContainerType: 'contained',
+            pageBackgroundType: 'plain',
+        },
+    },
+    {
+        key: 'concepts.projects.projectList',
+        path: `${CONCEPTS_PREFIX_PATH}/member/members-create`,
+        component: lazy(
+            () =>
+                import('@/views/concepts/members/MembersCreate/MembersCreate'),
+        ),
+        authority: [ADMIN],
+        meta: {
+            pageContainerType: 'contained',
+            pageBackgroundType: 'plain',
+        },
+    },
+    {
+        key: 'concepts.members',
+        path: `${CONCEPTS_PREFIX_PATH}/members/details/:id`,
+        component: lazy(
+            () => import('@/views/concepts/members/MembersDetails'),
+        ),
+        authority: [ADMIN],
         meta: {
             pageContainerType: 'contained',
             pageBackgroundType: 'plain',
@@ -166,7 +177,7 @@ const conceptsRoute: Routes = [
         key: 'concepts.projects.projectTasks',
         path: `${CONCEPTS_PREFIX_PATH}/projects/tasks`,
         component: lazy(() => import('@/views/concepts/projects/Tasks')),
-        authority: [ADMIN, USER],
+        authority: [USER],
         meta: {
             pageContainerType: 'contained',
         },
@@ -243,94 +254,6 @@ const conceptsRoute: Routes = [
         },
     },
     {
-        key: 'concepts.account.settings',
-        path: `${CONCEPTS_PREFIX_PATH}/account/settings`,
-        component: lazy(() => import('@/views/concepts/accounts/Settings')),
-        authority: [ADMIN, USER],
-        meta: {
-            header: {
-                title: 'Settings',
-            },
-            pageContainerType: 'contained',
-        },
-    },
-    {
-        key: 'concepts.account.activityLog',
-        path: `${CONCEPTS_PREFIX_PATH}/account/activity-log`,
-        component: lazy(() => import('@/views/concepts/accounts/ActivityLog')),
-        authority: [ADMIN, USER],
-        meta: {
-            pageContainerType: 'contained',
-        },
-    },
-    {
-        key: 'concepts.account.rolesPermissions',
-        path: `${CONCEPTS_PREFIX_PATH}/account/roles-permissions`,
-        component: lazy(
-            () => import('@/views/concepts/accounts/RolesPermissions'),
-        ),
-        authority: [ADMIN, USER],
-        meta: {
-            pageContainerType: 'contained',
-            pageBackgroundType: 'plain',
-        },
-    },
-    {
-        key: 'concepts.account.pricing',
-        path: `${CONCEPTS_PREFIX_PATH}/account/pricing`,
-        component: lazy(() => import('@/views/concepts/accounts/Pricing')),
-        authority: [ADMIN, USER],
-        meta: {
-            pageContainerType: 'contained',
-        },
-    },
-    {
-        key: 'concepts.helpCenter.supportHub',
-        path: `${CONCEPTS_PREFIX_PATH}/help-center/support-hub`,
-        component: lazy(
-            () => import('@/views/concepts/help-center/SupportHub'),
-        ),
-        authority: [ADMIN, USER],
-        meta: {
-            pageContainerType: 'gutterless',
-            pageBackgroundType: 'plain',
-        },
-    },
-    {
-        key: 'concepts.helpCenter.article',
-        path: `${CONCEPTS_PREFIX_PATH}/help-center/article/:id`,
-        component: lazy(() => import('@/views/concepts/help-center/Article')),
-        authority: [ADMIN, USER],
-        meta: {
-            pageContainerType: 'contained',
-            pageBackgroundType: 'plain',
-        },
-    },
-    {
-        key: 'concepts.helpCenter.editArticle',
-        path: `${CONCEPTS_PREFIX_PATH}/help-center/edit-article/:id`,
-        component: lazy(
-            () => import('@/views/concepts/help-center/EditArticle'),
-        ),
-        authority: [ADMIN, USER],
-        meta: {
-            pageBackgroundType: 'plain',
-            footer: false,
-        },
-    },
-    {
-        key: 'concepts.helpCenter.manageArticle',
-        path: `${CONCEPTS_PREFIX_PATH}/help-center/manage-article`,
-        component: lazy(
-            () => import('@/views/concepts/help-center/ManageArticle'),
-        ),
-        authority: [ADMIN, USER],
-        meta: {
-            pageBackgroundType: 'plain',
-            footer: false,
-        },
-    },
-    {
         key: 'concepts.calendar',
         path: `${CONCEPTS_PREFIX_PATH}/calendar`,
         component: lazy(() => import('@/views/concepts/calendar/Calendar')),
@@ -348,15 +271,6 @@ const conceptsRoute: Routes = [
         meta: {
             pageContainerType: 'contained',
             pageBackgroundType: 'plain',
-        },
-    },
-    {
-        key: 'concepts.mail',
-        path: `${CONCEPTS_PREFIX_PATH}/mail`,
-        component: lazy(() => import('@/views/concepts/mail/Mail')),
-        authority: [ADMIN, USER],
-        meta: {
-            pageContainerType: 'contained',
         },
     },
     {

@@ -1,0 +1,2 @@
+src/components/shared/RichTextEditor/toolButtons/ToolButtonHardBreak.tsx
+src/components/shared/StrictModeDroppable.tsx
