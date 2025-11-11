@@ -49,6 +49,8 @@ type FormSchema = {
     companySize: string
     notes: string
     picName: string
+    picWhatsapp?: string
+    picEmail?: string
     picRole: string[]
     currentSystem: string[]
     systemRequirement: string[]
@@ -67,6 +69,22 @@ const validationSchema: ZodType<FormSchema> = z.object({
     companySize: z.string().min(1, { message: 'Company Size required' }),
     notes: z.string().min(1, { message: 'Content required' }),
     picName: z.string().min(1, { message: 'PIC Name required' }),
+    picWhatsapp: z
+        .union([
+            z
+                .string()
+                .regex(/^\+?[0-9\s\-()]{6,}$/, {
+                    message: 'Please enter a valid WhatsApp number',
+                }),
+            z.literal(''),
+        ])
+        .optional(),
+    picEmail: z
+        .union([
+            z.string().email({ message: 'Please enter a valid email address' }),
+            z.literal(''),
+        ])
+        .optional(),
     picRole: z
         .array(z.string())
         .min(1, { message: 'At least 1 role required' }),
@@ -101,6 +119,8 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
             companySize: '',
             notes: '',
             picName: '',
+            picWhatsapp: '',
+            picEmail: '',
             picRole: [],
             currentSystem: [],
             systemRequirement: [],
@@ -122,6 +142,8 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
             title,
             companySize,
             picName,
+            picWhatsapp,
+            picEmail,
             picRole,
             currentSystem,
             systemRequirement,
@@ -142,6 +164,8 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
                 ((completedTask as number) / (totalTask as number)) * 100 || 0,
             companySize,
             picName,
+            picWhatsapp,
+            picEmail,
             picRole,
             notes,
             currentSystem,
@@ -200,6 +224,32 @@ const NewProjectForm = ({ onClose }: { onClose: () => void }) => {
                         control={control}
                         render={({ field }) => (
                             <Input type="text" autoComplete="off" {...field} />
+                        )}
+                    />
+                </FormItem>
+                <FormItem
+                    label="WhatsApp Number"
+                    invalid={Boolean(errors.picWhatsapp)}
+                    errorMessage={errors.picWhatsapp?.message}
+                >
+                    <Controller
+                        name="picWhatsapp"
+                        control={control}
+                        render={({ field }) => (
+                            <Input type="text" autoComplete="off" {...field} />
+                        )}
+                    />
+                </FormItem>
+                <FormItem
+                    label="Email"
+                    invalid={Boolean(errors.picEmail)}
+                    errorMessage={errors.picEmail?.message}
+                >
+                    <Controller
+                        name="picEmail"
+                        control={control}
+                        render={({ field }) => (
+                            <Input type="email" autoComplete="off" {...field} />
                         )}
                     />
                 </FormItem>

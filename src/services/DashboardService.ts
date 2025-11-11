@@ -7,6 +7,14 @@ export async function apiGetEcommerceDashboard<T>() {
     })
 }
 
+export async function apiGetUserDashboard<T>() {
+    return ApiService.fetchDataWithAxios<T>({
+        url: '/analytics/user',
+        method: 'get',
+    })
+}
+
+
 export async function apiGetProjectDashboard<T>() {
     return ApiService.fetchDataWithAxios<T>({
         url: '/before',
@@ -18,6 +26,13 @@ export async function apiGetMeetingDebrief<T>() {
     return ApiService.fetchDataWithAxios<T>({
         url: '/after',
         method: 'GET',
+    })
+}
+
+export async function apiCloseMeeting<T>(id: string | number) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: `/airtable/meetings/${id}`,
+        method: 'POST',
     })
 }
 

@@ -1,62 +1,49 @@
-export type RevenueChartData = {
-    categories: string[]
-    revenue: number[]
-    forecast: number[]
+export interface RevenueTrendPoint {
+    period: string
+    totalRevenue: number
+    lostRevenue: number
 }
 
-export type MeetingChartData = {
-    categories: string[]
-    totalMeetings: number[]
-    upcomingMeetings: number[]
+export interface RevenueStats {
+    totalRevenue: number
+    lostRevenue: number
+    conversionRate: number
+    trend?: RevenueTrendPoint[]
 }
 
-export type SalesFunnelKanbanStage = {
+export interface TargetStats {
+    targetAmount: number
+    achievedAmount: number
+    remainingAmount: number
+}
+
+export interface MeetingStats {
+    totalMeetings: number
+    completedDebriefs: number
+    pendingMeetings: number
+}
+
+export interface SentimentStats {
+    positive: number
+    neutral: number
+    negative: number
+}
+
+export interface FunnelStage {
     stage: string
-    funnel: number
-    kanban: number
+    totalDeals: number
+    totalRevenue: number
 }
 
-export type SalesTargetData = {
-    achieved: number
-    target: number
-    velocity: number[]
-    velocityPeriods: string[]
+export interface DealsStats {
+    totalClosedDeals: number
 }
 
-export type LeadsPerformanceData = {
-    owner: string
-    won: number
-    lost: number
-}
-
-export type PackageSelectionData = {
-    label: string
-    count: number
-}
-
-export type DealsClosedData = {
-    month: string
-    count: number
-}
-
-export type ConversionRateData = {
-    channel: string
-    percentage: number
-}
-
-export type MeetingSentimentData = {
-    sentiment: 'Positive' | 'Neutral' | 'Negative'
-    score: number
-}
-
-export type EcommerceDashboardData = {
-    revenue: RevenueChartData
-    meetings: MeetingChartData
-    salesFunnel: SalesFunnelKanbanStage[]
-    salesTarget: SalesTargetData
-    leadsPerformance: LeadsPerformanceData[]
-    packages: PackageSelectionData[]
-    dealsClosed: DealsClosedData[]
-    conversion: ConversionRateData[]
-    meetingSentiment: MeetingSentimentData[]
+export interface UserDashboardData {
+    revenue: RevenueStats
+    target: TargetStats
+    meetings: MeetingStats
+    sentiment: SentimentStats
+    funnel: FunnelStage[]
+    deals: DealsStats
 }

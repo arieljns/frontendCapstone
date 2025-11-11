@@ -11,6 +11,8 @@ import type { TableQueries } from '@/@types/common'
 import useSWR from 'swr'
 import { apiGetMeetingDebrief } from '@/services/DashboardService'
 import { AgreementResponse } from '../types'
+import { useOrderListStore } from '../store/orderListStore'
+import useOrderList from '../hooks/useOrderlist'
 
 const OrderColumn = ({ row }: { row: AgreementResponse }) => {
     const navigate = useNavigate()
@@ -58,8 +60,9 @@ const ActionColumn = ({ row }: { row: AgreementResponse }) => {
 }
 
 const OrderListTable = () => {
-    const { setOrderList, orderListTotal, tableData, setTableData } =
-        useOrderlist()
+    const { setOrderList, tableData, setTableData, orderList } =
+        useOrderListStore()
+    const { orderListTotal } = useOrderList()
     const { data, error, isLoading } = useSWR<AgreementResponse[]>(
         ['/after'],
         () => apiGetMeetingDebrief<AgreementResponse[]>(),
@@ -73,7 +76,8 @@ const OrderListTable = () => {
         if (data) {
             setOrderList(data)
         }
-    }, [data, error, isLoading])
+    }, [data, setOrderList, error])
+
     const columns: ColumnDef<AgreementResponse>[] = useMemo(
         () => [
             {

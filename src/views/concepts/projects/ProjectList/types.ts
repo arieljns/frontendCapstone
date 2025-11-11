@@ -12,6 +12,8 @@ export type Project = {
     companySize: string
     notes: string
     picName: string
+    picWhatsapp?: string
+    picEmail?: string
     picRole: string[]
     currentSystem: string[]
     systemRequirement: string[]

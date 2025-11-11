@@ -17,6 +17,7 @@ import FollowupSectionEdit from './components/FollowupSection'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
 import { apiGetCuratedRecord } from '@/services/OrderService'
+import MeetingDebriefInfoCard from './components/MeetingDebriefInfoCard'
 
 type OrderFormProps = {
     children: ReactNode
@@ -60,9 +61,49 @@ const baseValidationSchema = z.object({
         .min(1, { message: 'must include before meeting number' }),
 })
 
+type MeetingProfile = {
+    companyName: string
+    picName: string
+    picRole: string
+    picWhatsapp: string
+    picEmail: string
+}
+
+const meetingProfileDefaults: MeetingProfile = {
+    companyName: '',
+    picName: '',
+    picRole: '',
+    picWhatsapp: '',
+    picEmail: '',
+}
+
+type LooseRecord = Record<string, unknown>
+
+const getStringValue = (record: LooseRecord | undefined, key: string) => {
+    const value = record?.[key]
+    return typeof value === 'string' ? value : ''
+}
+
+const extractMeetingProfile = (record?: LooseRecord): MeetingProfile => ({
+    companyName:
+        getStringValue(record, 'companyName') ||
+        getStringValue(record, 'name') ||
+        meetingProfileDefaults.companyName,
+    picName:
+        getStringValue(record, 'picName') || meetingProfileDefaults.picName,
+    picRole:
+        getStringValue(record, 'picRole') || meetingProfileDefaults.picRole,
+    picWhatsapp:
+        getStringValue(record, 'picWhatsapp') ||
+        meetingProfileDefaults.picWhatsapp,
+    picEmail:
+        getStringValue(record, 'picEmail') || meetingProfileDefaults.picEmail,
+})
+
 const MeetingDebriefFormEdit = (props: OrderFormProps) => {
     const { onFormSubmit, children, defaultValues, defaultProducts } = props
     const params = useParams()
+    const [meetingProfile, setMeetingProfile] = useState(meetingProfileDefaults)
 
     const { data, error, isLoading } = useSWR(
         ['/after/user'],
@@ -89,6 +130,9 @@ const MeetingDebriefFormEdit = (props: OrderFormProps) => {
         }
         if (!isEmpty(defaultValues)) {
             reset(defaultValues)
+            setMeetingProfile(
+                extractMeetingProfile(defaultValues as LooseRecord),
+            )
         }
         return () => {
             setSelectedProduct([])
@@ -143,12 +187,17 @@ const MeetingDebriefFormEdit = (props: OrderFormProps) => {
         const curatedData = data.find((item) => item.id === targetId)
         if (!curatedData) return
         reset({ ...curatedData })
+        setMeetingProfile(extractMeetingProfile(curatedData as LooseRecord))
     }, [data, reset])
 
     const watchedValue = watch()
     useEffect(() => {
         console.log('watch value:', watchedValue)
     }, [watchedValue])
+
+    const handleCloseMeeting = () => {
+        console.log('Close Meeting clicked for meeting', params.id)
+    }
     return (
         <div className="flex">
             <Form
@@ -156,7 +205,7 @@ const MeetingDebriefFormEdit = (props: OrderFormProps) => {
                 onSubmit={handleSubmit(onSubmit, onError)}
             >
                 <Container>
-                    <div className="flex gap-4">
+                    <div className="flex flex-col gap-4 lg:flex-row">
                         <div className="flex-1">
                             <div className="flex flex-col gap-4">
                                 <ProductSelectSectionEdit
@@ -176,6 +225,16 @@ const MeetingDebriefFormEdit = (props: OrderFormProps) => {
                                     errors={errors}
                                 />
                             </div>
+                        </div>
+                        <div className="w-full lg:max-w-xs">
+                            <MeetingDebriefInfoCard
+                                companyName={meetingProfile.companyName}
+                                picName={meetingProfile.picName}
+                                picRole={meetingProfile.picRole}
+                                picWhatsapp={meetingProfile.picWhatsapp}
+                                picEmail={meetingProfile.picEmail}
+                                onCloseMeeting={handleCloseMeeting}
+                            />
                         </div>
                     </div>
                 </Container>

@@ -6,6 +6,7 @@ import ScrollBar from '@/components/ui/ScrollBar'
 import CreateEventDialog, { eventTypes } from './CreateEventDialog'
 import { eventGenerator, isToday } from '../utils'
 import classNames from '@/utils/classNames'
+import { useProjectScheduleStore } from '../store/projectScheduleStore'
 
 import dayjs from 'dayjs'
 import type { FormSchema as CreateEventPayload } from './CreateEventDialog'
@@ -54,17 +55,21 @@ const UpcomingSchedule = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(
         dayjs().toDate(),
     )
-    const [createdEventCache, setCreatedEventCache] = useState<
-        Record<string, ScheduledEvent[]>
-    >({})
+    const eventsByDate = useProjectScheduleStore((state) => state.eventsByDate)
+    const addEvent = useProjectScheduleStore((state) => state.addEvent)
+    const displayDate = selectedDate ?? dayjs().toDate()
 
     const eventList = useMemo(() => {
-        const date = selectedDate
-        const previousCreatedEvent =
-            createdEventCache[dayjs(date).toISOString()] || []
+        const date = selectedDate ?? dayjs().toDate()
+        const dateKey = dayjs(date).format('YYYY-MM-DD')
+        const storedEvents =
+            eventsByDate[dateKey]?.map((event) => ({
+                ...event,
+                time: event.time ? dayjs(event.time).toDate() : undefined,
+            })) ?? []
         const eventList = [
-            ...eventGenerator(date as Date),
-            ...previousCreatedEvent,
+            ...eventGenerator(date),
+            ...storedEvents,
         ]
 
         return eventList.sort((a, b) => {
@@ -79,26 +84,23 @@ const UpcomingSchedule = () => {
             }
             return a.time.getTime() - b.time.getTime()
         })
-    }, [selectedDate, createdEventCache])
+    }, [selectedDate, eventsByDate])
 
     const handleCreateEvent = (value: CreateEventPayload & { id: string }) => {
-        const payload = {
+        const baseDate = selectedDate ?? dayjs().toDate()
+        const dateKey = dayjs(baseDate).format('YYYY-MM-DD')
+        const time = dayjs(baseDate)
+            .set('hour', value.time)
+            .set('minute', 0)
+            .set('second', 0)
+            .set('millisecond', 0)
+            .toISOString()
+
+        addEvent(dateKey, {
             id: value.id,
             label: value.label,
             type: value.type,
-            time: dayjs(selectedDate)
-                .set('hour', value.time)
-                .set('minute', 0)
-                .toDate(),
-        }
-        setCreatedEventCache((prevRecord) => {
-            if (prevRecord[dayjs(selectedDate).toISOString()]) {
-                prevRecord[dayjs(selectedDate).toISOString()].push(payload)
-            } else {
-                prevRecord[dayjs(selectedDate).toISOString()] = [payload]
-            }
-
-            return structuredClone(prevRecord)
+            time,
         })
     }
 
@@ -107,7 +109,7 @@ const UpcomingSchedule = () => {
             <div className="flex flex-col md:flex-row xl:flex-col md:gap-10 xl:gap-0 mb-4">
                 <div className="flex items-center mx-auto w-[280px]">
                     <Calendar
-                        value={selectedDate}
+                        value={displayDate}
                         onChange={(val) => {
                             setSelectedDate(val)
                         }}
@@ -117,9 +119,9 @@ const UpcomingSchedule = () => {
                     <div className="my-6">
                         <h5>
                             Scehdule{' '}
-                            {isToday(selectedDate as Date)
+                            {isToday(displayDate)
                                 ? 'today'
-                                : dayjs(selectedDate).format('DD MMM')}
+                                : dayjs(displayDate).format('DD MMM')}
                         </h5>
                     </div>
                     <div className="w-full">

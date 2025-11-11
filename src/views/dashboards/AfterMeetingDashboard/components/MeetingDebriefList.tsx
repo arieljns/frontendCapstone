@@ -171,16 +171,7 @@ const MeetingDebriefList = () => {
                                             </div>
 
                                             <div className="mx-2">
-                                                <Button className="flex items-center">
-                                                    <HiOutlineDocumentReport />
-                                                    <Link
-                                                        to={`/concepts/quotation/${project.id}`}
-                                                    >
-                                                        <h6 className="text-xs">
-                                                            Generate Invoice
-                                                        </h6>
-                                                    </Link>
-                                                </Button>
+                                                
                                             </div>
                                         </div>
                                     </div>

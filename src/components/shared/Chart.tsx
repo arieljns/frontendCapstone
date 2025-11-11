@@ -100,6 +100,14 @@ const Chart = (props: ChartProps) => {
     }
 
     if (type === 'donut') {
+        options.plotOptions = options.plotOptions ?? {}
+        options.plotOptions.pie = options.plotOptions.pie ?? {}
+        options.plotOptions.pie.donut = options.plotOptions.pie.donut ?? {}
+        options.plotOptions.pie.donut.labels =
+            options.plotOptions.pie.donut.labels ?? {}
+        options.plotOptions.pie.donut.labels.total =
+            options.plotOptions.pie.donut.labels.total ?? {}
+
         if (donutTitle) {
             options.plotOptions.pie.donut.labels.total.label = donutTitle
         }

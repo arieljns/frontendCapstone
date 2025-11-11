@@ -46,13 +46,13 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     const navigatorRef = useRef<IsolatedNavigatorRef>(null)
 
-    const redirect = () => {
+    const redirect = (fallbackPath = appConfig.authenticatedEntryPath) => {
         const search = window.location.search
         const params = new URLSearchParams(search)
         const redirectUrl = params.get(REDIRECT_URL_KEY)
 
         navigatorRef.current?.navigate(
-            redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath,
+            redirectUrl ? redirectUrl : fallbackPath,
         )
     }
 
@@ -80,19 +80,23 @@ function AuthProvider({ children }: AuthProviderProps) {
     const signIn = async (values: SignInCredential): AuthResult => {
         try {
             const resp = await apiSignIn(values)
-            const roles = (resp.user.role || []) as string
             if (resp) {
                 handleSignIn({ accessToken: resp.token }, resp.user)
-                redirect()
+                const role = resp.user?.role
+                const normalizedRole = Array.isArray(role)
+                    ? role[0]
+                    : role
+                const fallbackPath =
+                    normalizedRole === 'admin'
+                        ? '/dashboards/admin/analytics'
+                        : normalizedRole === 'user'
+                        ? '/dashboards/ecommerce'
+                        : appConfig.authenticatedEntryPath
+                redirect(fallbackPath)
                 return {
                     status: 'success',
                     message: '',
                 }
-            }
-            if (roles.includes('admin')) {
-                navigatorRef.current?.navigate('/dashboards/admin')
-            } else {
-                navigatorRef.current?.navigate('/dashboards/ecommerce')
             }
             return {
                 status: 'failed',
