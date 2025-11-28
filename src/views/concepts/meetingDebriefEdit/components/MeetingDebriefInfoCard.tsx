@@ -151,7 +151,9 @@ const MeetingDebriefInfoCard = ({
 
                     <Button className="flex items-center">
                         <HiOutlineDocumentReport />
-                        <Link to={`/concepts/quotation/${debriefInfo?.beforeMeeting?.id}`}>
+                        <Link
+                            to={`/concepts/quotation/${debriefInfo?.beforeMeeting?.id}`}
+                        >
                             <h6 className="text-xs">Generate Invoice</h6>
                         </Link>
                     </Button>

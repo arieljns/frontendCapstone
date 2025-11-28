@@ -1,66 +1,40 @@
 import './quotationHeader.css'
 import QuotationFooter from './QuotationFooter'
+import { useParams } from 'react-router-dom'
+import { useProjectListStore } from '../../projects/ProjectList/store/projectListStore'
 
 export type QuotationData = {
     id: string
-    expiryDate?: string
-    picWhatsapp?: string
-    picEmail?: string
-    category?: string
-    picName?: string
-    name?: string
-    companySize?: string
-    afterMeeting?: string[]
-    totalAmount?: number
-    discountRate?: string
-    termIn?: string
-    totalEmployee?: string
-    picRole?: string[]
+    expiryDate: string
+    picWhatsapp: string
+    picEmail: string
+    category: string
+    picName: string
+    name: string
+    companySize: string
+    afterMeeting: string[]
+    totalAmount: number
+    discountRate: string
+    termIn: string
+    totalEmployee: string
 }
 
-type QuotationHeaderProps = {
-    data?: QuotationData
-    quotationId: string
-    isLoading?: boolean
-}
-
-const defaultDisplay = '-'
-
-const formatDate = (date?: string) => {
-    if (!date) return defaultDisplay
-    try {
-        return Intl.DateTimeFormat('id-ID', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-        }).format(new Date(date))
-    } catch {
-        return date
-    }
-}
-
-const formatContactLine = (name?: string, email?: string, phone?: string) => {
-    const parts = [name, email, phone].filter(Boolean)
-    return parts.length ? parts.join(' / ') : defaultDisplay
-}
-
-export default function QuotationHeader({
-    data,
-    quotationId,
-    isLoading,
-}: QuotationHeaderProps) {
-    if (isLoading && !data) {
-        return (
-            <div className="w-[210mm] mx-auto pt-[10mm] pb-[10mm] text-center text-sm text-gray-500">
-                Loading quotation details...
-            </div>
-        )
-    }
-    console.log(data)
-
-    function formatIDR(value: number = 0) {
-        return `Rp ${value.toLocaleString('id-ID')}`
-    }
+export default function QuotationHeader() {
+    // const {
+    //     id,
+    //     expiryDate,
+    //     picWhatsapp,
+    //     picEmail,
+    //     category,
+    //     picName,
+    //     name,
+    //     companySize,
+    //     afterMeeting,
+    //     totalAmount,
+    //     discountRate,
+    //     termIn,
+    //     totalEmployee,
+    // } = props
 
     return (
         <div
@@ -83,11 +57,11 @@ export default function QuotationHeader({
                     </div>
                     <div>
                         <p className="font-semibold">Quotation No.</p>
-                        <p>2401/SQ/MSN/{quotationId}/2024</p>
+                        <p>2401/SQ/MSN/{id}/2024</p>
                     </div>
                     <div>
                         <p className="font-semibold">Expiry Date</p>
-                        <p>{formatDate(data?.expiryDate)}</p>
+                        <p>23 Desember 2025</p>
                     </div>
                 </div>
 
@@ -112,16 +86,16 @@ export default function QuotationHeader({
                     <tbody>
                         <tr>
                             <td className="border border-gray-400 p-2">
-                                {data?.afterMeeting?.products[0]?.name}
+                                PLUS FLAT - Basic
                             </td>
                             <td className="border border-gray-400 p-2">
                                 12 Bulan
                             </td>
                             <td className="border border-gray-400 p-2">
-                                {formatIDR(data?.afterMeeting?.mrr)}
+                                Rp 2.500.000
                             </td>
                             <td className="border border-gray-400 p-2">
-                                {formatIDR(data?.afterMeeting?.mrr * 12)}
+                                Rp 30.000.000
                             </td>
                         </tr>
                         <tr className=" font-semibold">
@@ -131,9 +105,7 @@ export default function QuotationHeader({
                             >
                                 Diskon
                             </td>
-                            <td className="border border-gray-400 p-2">
-                                {data?.afterMeeting?.discountRate}%
-                            </td>
+                            <td className="border border-gray-400 p-2">28%</td>
                         </tr>
                         <tr>
                             <td
@@ -143,7 +115,7 @@ export default function QuotationHeader({
                                 Total setelah diskon
                             </td>
                             <td className="border border-gray-400 bg-[#512da8] text-white p-2">
-                                {formatIDR(data?.afterMeeting?.totalAmount)}
+                                Rp 21.600.000
                             </td>
                         </tr>
                     </tbody>
@@ -153,9 +125,7 @@ export default function QuotationHeader({
                 <div className="grid grid-cols-2 border divide-x divide-y border-black mb-6">
                     <div className="p-3 text-gray-900">COMPANY NAME</div>
                     <div className="p-3 text-gray-900">TAX NUMBER</div>
-                    <div className="p-3 font-bold">
-                        {data?.name ?? defaultDisplay}
-                    </div>
+                    <div className="p-3 font-bold">{quotationData.name}</div>
                     <div className="p-3"></div>
 
                     <div className="p-3 text-gray-900">MAILING ADDRESS</div>
@@ -170,21 +140,18 @@ export default function QuotationHeader({
                         FINANCE PIC / EMAIL / CONTACT
                     </div>
                     <div className="p-3 font-bold">
-                        {formatContactLine(
-                            data?.picName,
-                            data?.picEmail,
-                            data?.picWhatsapp,
-                        )}
+                        Grace Agnesia / agnesia@bsstec.com / 085207734731
                     </div>
                     <div className="p-3"></div>
 
                     <div className="p-3 text-gray-900">PIC NAME</div>
                     <div className="p-3 text-gray-900">PIC POSITION</div>
                     <div className="p-3 font-bold">
-                        {data?.picName ?? defaultDisplay}
+                        {' '}
+                        {quotationData.picName}
                     </div>
                     <div className="p-3 font-bold">
-                        {data?.picRole?.[0] ?? defaultDisplay}
+                        {quotationData.picRole[0]}
                     </div>
 
                     <div className="p-3 text-gray-900">
@@ -225,3 +192,4 @@ export default function QuotationHeader({
         </div>
     )
 }
+

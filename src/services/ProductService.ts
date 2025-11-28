@@ -11,10 +11,9 @@ export async function apiGetMeetingDebriefDataWithId<
     })
 }
 
-export async function apiGetProductList<
-    T,
-    U extends Record<string, unknown>,
->(params: U) {
+export async function apiGetProductList<T, U extends Record<string, unknown>>(
+    params: U,
+) {
     return ApiService.fetchDataWithAxios<T>({
         url: '/products',
         method: 'get',
@@ -30,5 +29,11 @@ export async function apiGetProduct<T, U extends Record<string, unknown>>({
         url: `/products/${id}`,
         method: 'get',
         params,
+    })
+}
+
+export async function apiGetQuotationData<T = unknown>(id: string) {
+    return ApiService.fetchDataWithAxios<T>({
+        url: `/form/${id}`,
     })
 }

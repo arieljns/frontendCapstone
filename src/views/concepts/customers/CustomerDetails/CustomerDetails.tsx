@@ -37,7 +37,7 @@ const CustomerDetails = () => {
                             </TabList>
                             <div className="p-4">
                                 <TabContent value="activity">
-                                    <CustomerEdit customerData={data}/>
+                                    <CustomerEdit customerData={data} />
                                 </TabContent>
                                 <TabContent value="billing">
                                     <BillingSection data={data} />

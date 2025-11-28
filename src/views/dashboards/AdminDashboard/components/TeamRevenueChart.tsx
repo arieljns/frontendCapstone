@@ -1,72 +1,100 @@
+import { useMemo } from 'react'
 import ReactApexChart from 'react-apexcharts'
+import type { ApexAxisChartSeries, ApexOptions } from 'apexcharts'
+import type { WeeklySummaryView } from '../hooks/useManagerSummary'
 
-const options: ApexCharts.ApexOptions = {
-    chart: {
-        type: 'area',
-        toolbar: { show: false },
-    },
-    stroke: {
-        curve: 'stepline',
-        width: 2,
-    },
-    xaxis: {
-        categories: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-        ],
-    },
-    yaxis: {
-        labels: {
-            formatter: (value) => `Rp ${value.toLocaleString()}`,
-        },
-    },
-    dataLabels: { enabled: false },
-    tooltip: {
-        y: {
-            formatter: (value) => `Rp ${value.toLocaleString()}`,
-        },
-    },
-    fill: {
-        opacity: 0.3, // Light transparent shading
-    },
+type TeamRevenueChartProps = {
+    weeks: WeeklySummaryView[]
 }
 
-const series = [
-    {
-        name: 'Revenue',
-        data: [
-            12000000, 15000000, 18000000, 14000000, 20000000, 25000000,
-            23000000, 24000000, 26000000, 28000000, 30000000, 32000000,
-        ],
-    },
-    {
-        name: 'Target',
-        data: [
-            18000000, 13000000, 19000000, 9000000, 18000000, 22000000,
-            18000000, 19000000, 24000000, 27000000, 24000000, 30000000,
-        ],
-    },
-]
+const currencyFormatter = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0,
+})
 
-export default function TeamRevenueChart() {
+const formatCurrency = (value: number | string) => {
+    const numericValue =
+        typeof value === 'number' ? value : Number.parseFloat(value)
+    if (Number.isNaN(numericValue)) {
+        return currencyFormatter.format(0)
+    }
+    return currencyFormatter.format(numericValue)
+}
+
+const TeamRevenueChart = ({ weeks }: TeamRevenueChartProps) => {
+    const categories = useMemo(() => weeks.map((week) => week.label), [weeks])
+
+    const series = useMemo<ApexAxisChartSeries>(
+        () => [
+            {
+                name: 'Revenue Won',
+                data: weeks.map((week) => week.totalRevenueWon),
+            },
+            {
+                name: 'Revenue Lost',
+                data: weeks.map((week) => week.totalRevenueLost),
+            },
+        ],
+        [weeks],
+    )
+
+    const options = useMemo<ApexOptions>(
+        () => ({
+            chart: {
+                type: 'area',
+                stacked: true,
+                toolbar: { show: false },
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2,
+            },
+            xaxis: {
+                categories,
+            },
+            yaxis: {
+                labels: {
+                    formatter: (value) => formatCurrency(value),
+                },
+            },
+            dataLabels: { enabled: true },
+            tooltip: {
+                y: {
+                    formatter: (value) => formatCurrency(value),
+                },
+            },
+            fill: {
+                opacity: 0.3,
+            },
+            colors: ['#15803D', '#B91C1C'],
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left',
+            },
+            noData: {
+                text: 'No revenue data yet.',
+            },
+        }),
+        [categories],
+    )
+
+    if (!weeks.length) {
+        return (
+            <div className="py-8 text-center text-sm text-gray-500">
+                Revenue data will appear once deals start closing.
+            </div>
+        )
+    }
+
     return (
-        <div>
-            <ReactApexChart
-                options={options}
-                series={series}
-                type="area"
-                height={350}
-            />
-        </div>
+        <ReactApexChart
+            options={options}
+            series={series}
+            type="area"
+            height={350}
+        />
     )
 }
+
+export default TeamRevenueChart

@@ -14,7 +14,6 @@ export async function apiGetUserDashboard<T>() {
     })
 }
 
-
 export async function apiGetProjectDashboard<T>() {
     return ApiService.fetchDataWithAxios<T>({
         url: '/before',
@@ -63,6 +62,13 @@ export async function apiGetAnalyticDashboard<T>() {
 export async function apiGetMarketingDashboard<T>() {
     return ApiService.fetchDataWithAxios<T>({
         url: '/api/dashboard/marketing',
+        method: 'get',
+    })
+}
+
+export async function apiGetAdminDashboardData<T>() {
+    return ApiService.fetchDataWithAxios<T>({
+        url: 'analytics/manager/summary',
         method: 'get',
     })
 }
